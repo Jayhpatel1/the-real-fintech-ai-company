@@ -1,0 +1,31 @@
+{
+  "name": "therealfintech-website",
+  "version": "1.0.0",
+  "description": "The Real Fintech AI Company - AI-Powered Real Estate Platform",
+  "main": "index.html",
+  "scripts": {
+    "start": "firebase serve",
+    "deploy": "firebase deploy",
+    "build": "echo 'Build completed'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "real-estate",
+    "ai",
+    "fintech",
+    "voice-search",
+    "property",
+    "construction"
+  ],
+  "author": "Jay Patel <jay@therealfintech.com>",
+  "license": "MIT",
+  "dependencies": {
+    "firebase-tools": "^12.0.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/therealfintech/website.git"
+  },
+  "homepage": "https://therealfintech.com"
+}
