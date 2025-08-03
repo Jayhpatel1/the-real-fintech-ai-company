@@ -473,10 +473,10 @@ border: 2px solid var(--bright-yellow);
 .logo-square {
     width: 32px;
     height: 32px;
-    background: var(--saffron);
+    background: #F4C430;
     border-radius: 6px;
-    border: 3px solid var(--saffron);
-    box-shadow: 0 4px 12px rgba(255, 153, 51, 0.4);
+    border: 3px solid #F4C430;
+    box-shadow: 0 4px 12px rgba(244, 196, 48, 0.6);
     position: relative;
     overflow: hidden;
 }
@@ -493,11 +493,11 @@ border: 2px solid var(--bright-yellow);
 }
 
 .nav-logo h2 {
-    color: #1a202c;
+    color: #F4C430;
     margin: 0;
     font-weight: 800;
     font-size: 1.5rem;
-    text-shadow: 1px 1px 2px rgba(255,255,255,0.3);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* AI Features Showcase */
