@@ -647,9 +647,11 @@ border: 2px solid var(--bright-yellow);
     margin-bottom: 1.5rem;
     font-weight: 900;
     font-size: 2.2rem;
-    line-height: 1.1;
-    color: #ffffff;
-    text-shadow: 3px 3px 5px rgba(0,0,0,0.8);
+    line-height: 1.2;
+    color: #1a202c;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .hero-subtitle {
