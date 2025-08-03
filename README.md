@@ -1,41 +1,108 @@
-# Next.js on Netlify Platform Starter
+# RealFinTech Website
 
-[Live Demo](https://nextjs-platform-starter.netlify.app/)
+A modern, responsive website for RealFinTech - Innovative Financial Technology Solutions.
 
-A modern starter based on Next.js 14 (App Router), Tailwind, and [Netlify Core Primitives](https://docs.netlify.com/core/overview/#develop) (Edge Functions, Image CDN, Blob Store).
+## About RealFinTech
 
-In this site, Netlify Core Primitives are used both implictly for running Next.js features (e.g. Route Handlers, image optimization via `next/image`, and more) and also explicitly by the user code.
+RealFinTech provides cutting-edge financial technology solutions for modern businesses. Our platform combines advanced technology with industry expertise to deliver comprehensive fintech solutions including:
 
-Implicit usage means you're using any Next.js functionality and everything "just works" when deployed - all the plumbing is done for you. Explicit usage is framework-agnostic and typically provides more features than what Next.js exposes.
+- Digital Banking Solutions
+- Payment Processing
+- Financial Analytics
+- Regulatory Compliance
+- API Integration
+- White-Label Solutions
 
-## Deploying to Netlify
+## Features
 
-This site requires [Netlify Next Runtime v5](https://docs.netlify.com/frameworks/next-js/overview/) for full functionality. That version is now being gradually rolled out to all Netlify accounts.
+- **Modern Design**: Clean, professional design optimized for fintech industry
+- **Responsive**: Fully responsive design that works on all devices
+- **Fast Performance**: Built with Next.js for optimal performance
+- **SEO Optimized**: Proper meta tags and structured data
+- **Contact Forms**: Integrated contact forms for lead generation
+- **Blog System**: Content management for industry insights
 
-After deploying via the button below, please visit the **Site Overview** page for your new site to check whether it is already using the v5 runtime. If not, you'll be prompted to opt-in to to v5.
+## Technology Stack
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/netlify-templates/next-platform-starter)
+- **Framework**: Next.js 15.4.4
+- **Styling**: Tailwind CSS 4.0
+- **Deployment**: Netlify
+- **Language**: JavaScript/JSX
 
-## Developing Locally
+## Getting Started
 
-1. Clone this repository, then run `npm install` in its root directory.
+### Prerequisites
 
-2. For the starter to have full functionality locally (e.g. edge functions, blob store), please ensure you have an up-to-date version of Netlify CLI. Run:
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd realfintech-website
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Run the development server:
+```bash
+npm run dev
+```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Deployment
+
+This project is configured for deployment on Netlify. The deployment process is automated:
+
+1. **Automatic Deployment**: Push to main branch triggers automatic deployment
+2. **Build Command**: `npm run build`
+3. **Publish Directory**: `.next`
+
+### Custom Domain Setup
+
+To set up the custom domain `therealfintech.com`:
+
+1. In your Netlify dashboard, go to Site Settings > Domain Management
+2. Add custom domain: `therealfintech.com`
+3. Configure DNS settings as instructed by Netlify
+4. Enable HTTPS (automatic with Netlify)
+
+## Project Structure
 
 ```
-npm install netlify-cli@latest -g
+├── app/                    # Next.js app directory
+│   ├── page.jsx           # Home page
+│   ├── layout.jsx         # Root layout
+│   ├── about/             # About page
+│   ├── services/          # Services page
+│   ├── contact/           # Contact page
+│   └── blog/              # Blog page
+├── components/            # Reusable components
+├── styles/               # Global styles
+├── public/               # Static assets
+└── netlify.toml          # Netlify configuration
 ```
 
-3. Link your local repository to the deployed Netlify site. This will ensure you're using the same runtime version for both local development and your deployed site.
+## Contributing
 
-```
-netlify link
-```
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-4. Then, run the Next.js development server via Netlify CLI:
+## License
 
-```
-netlify dev
-```
+This project is proprietary to RealFinTech.
 
-If your browser doesn't navigate to the site automatically, visit [localhost:8888](http://localhost:8888).
+## Contact
+
+For questions or support, contact us at:
+- Email: info@therealfintech.com
+- Website: https://therealfintech.com
