@@ -137,7 +137,7 @@ body {
     border: 2px solid var(--bright-yellow);
 }
 
-.hero-content h1, .section-title {
+.section-title {
     font-weight: 700;
     background: linear-gradient(135deg, var(--saffron) 0%, var(--golden) 50%, var(--bright-yellow) 100%);
     -webkit-background-clip: text;
