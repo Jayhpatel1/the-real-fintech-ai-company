@@ -309,20 +309,21 @@ background: linear-gradient(135deg, var(--saffron) 0%, var(--golden) 100%);
 
 .floating-stats-window .stat h3 {
     font-size: 1.8rem;
-    font-weight: 700;
+    font-weight: 800;
     margin-bottom: 5px;
-background: linear-gradient(135deg, var(--saffron) 0%, var(--golden) 50%, var(--bright-yellow) 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.7);
 }
 
 .floating-stats-window .stat p {
     font-size: 0.9rem;
-    color: #374151;
-    font-weight: 500;
+    color: #1a202c;
+    font-weight: 700;
     margin: 0;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.6);
 }
 
 /* Reset and Base Styles */
@@ -637,8 +638,12 @@ border: 2px solid var(--bright-yellow);
     font-size: 2.2rem;
     line-height: 1.1;
     color: #1a202c;
-    text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
-    filter: drop-shadow(1px 1px 2px rgba(255,255,255,0.5));
+    text-shadow: 2px 2px 4px rgba(255,255,255,0.9), 1px 1px 8px rgba(255,255,255,0.7);
+    filter: drop-shadow(2px 2px 4px rgba(255,255,255,0.8));
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .hero-subtitle {
