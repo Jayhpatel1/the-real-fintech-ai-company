@@ -4,9 +4,10 @@ import { Header } from '../components/header';
 
 export const metadata = {
     title: {
-        template: '%s | Netlify',
-        default: 'Netlify Starter'
-    }
+        template: '%s | The Real Fintech',
+        default: 'The Real Fintech'
+    },
+    description: 'The Real Fintech - Authentic financial technology solutions and insights'
 };
 
 export default function RootLayout({ children }) {
