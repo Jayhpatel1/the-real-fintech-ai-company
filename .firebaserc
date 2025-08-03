@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "the-real-fintech-ai-company"
-  }
+  },
+  "targets": {
+    "the-real-fintech-ai-company": {
+      "hosting": {
+        "therealfintech": [
+          "therealfintech"
+        ],
+        "main": [
+          "the-real-fintech-ai-company"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
