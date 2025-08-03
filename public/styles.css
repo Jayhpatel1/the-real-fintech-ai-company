@@ -648,10 +648,14 @@ border: 2px solid var(--bright-yellow);
     font-weight: 900;
     font-size: 2.2rem;
     line-height: 1.2;
-    color: #1a202c;
+    color: #FFFFFF !important;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5) !important;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background: none !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    -webkit-background-clip: border-box !important;
 }
 
 .hero-subtitle {
@@ -1260,6 +1264,11 @@ border-color: var(--bright-yellow) !important;
         padding: 0 10px;
         word-wrap: break-word;
         hyphens: auto;
+        color: #FFFFFF !important;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5) !important;
+        background: none !important;
+        -webkit-text-fill-color: #FFFFFF !important;
+        -webkit-background-clip: border-box !important;
     }
     
     .hero-subtitle {
