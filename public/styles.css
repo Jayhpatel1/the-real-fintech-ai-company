@@ -637,13 +637,8 @@ border: 2px solid var(--bright-yellow);
     font-weight: 900;
     font-size: 2.2rem;
     line-height: 1.1;
-    color: #1a202c;
-    text-shadow: 2px 2px 4px rgba(255,255,255,0.9), 1px 1px 8px rgba(255,255,255,0.7);
-    filter: drop-shadow(2px 2px 4px rgba(255,255,255,0.8));
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffffff;
+    text-shadow: 3px 3px 5px rgba(0,0,0,0.8);
 }
 
 .hero-subtitle {
