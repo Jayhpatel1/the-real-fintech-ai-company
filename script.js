@@ -357,4 +357,31 @@ document.addEventListener('DOMContentLoaded', function () {
             header.style.background = 'rgba(255, 255, 255, 0.95)';
         }
     });
+
+    // Floating window color cycling animation (saffron, red, blue every 4 seconds)
+    const floatingButton = document.getElementById('admin-float-btn');
+    if (floatingButton) {
+        const colors = [
+            'linear-gradient(135deg, #F4C430 0%, #D2691E 100%)', // Saffron
+            'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)', // Red
+            'linear-gradient(135deg, #0000FF 0%, #000099 100%)'  // Blue
+        ];
+        
+        let colorIndex = 0;
+        
+        // Initial color
+        const button = floatingButton.querySelector('button');
+        if (button) {
+            button.style.background = colors[colorIndex];
+        }
+        
+        // Change color every 4 seconds
+        setInterval(() => {
+            if (button) {
+                colorIndex = (colorIndex + 1) % colors.length;
+                button.style.background = colors[colorIndex];
+                button.style.boxShadow = `0 4px 20px ${colorIndex === 0 ? 'rgba(244, 196, 48, 0.4)' : colorIndex === 1 ? 'rgba(255, 0, 0, 0.4)' : 'rgba(0, 0, 255, 0.4)'}`;
+            }
+        }, 4000);
+    }
 });
