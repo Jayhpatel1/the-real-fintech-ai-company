@@ -18,41 +18,200 @@ document.addEventListener('DOMContentLoaded', function () {
         recognition = new SpeechRecognition();
         recognition.continuous = false;
         recognition.interimResults = false;
-        recognition.lang = 'en-US';
+        recognition.lang = 'en-US'; // English language recognition
     }
 
-    // Sample property and product data for AI responses
+// Firebase real-time data update sample
+    const db = firebase.firestore();
+
+    // Fetching properties and products from Firebase
     const sampleData = {
-        properties: [
-            { type: '2BHK Apartment', price: '₹45 Lakhs', location: 'Bhavnagar', area: '1200 sq ft' },
-            { type: '3BHK Villa', price: '₹85 Lakhs', location: 'Ramnagar', area: '2200 sq ft' },
-            { type: '1BHK Flat', price: '₹28 Lakhs', location: 'City Center', area: '800 sq ft' }
-        ],
-        products: {
-            'solar panels': [{ name: 'Premium Solar Panel 500W', price: '₹15,000', efficiency: '22%' }],
-            'shower': [{ name: 'Luxury Rain Shower', price: '₹8,500', brand: 'Premium Bath' }],
-            'doors': [{ name: 'Security Steel Door', price: '₹12,000', material: 'Steel & Wood' }],
-            'furniture': [{ name: 'Modern Sofa Set', price: '₹45,000', material: 'Leather' }]
-        },
-        services: {
-            'construction': 'We provide complete construction services starting from ₹1,200 per sq ft',
-            'renovation': 'Interior renovation services starting from ₹500 per sq ft',
-            'demolition': 'Safe demolition services starting from ₹100 per sq ft'
-        }
+        properties: [],
+        products: {},
+        services: {}
     };
+
+    // Load properties collection
+    db.collection('properties').onSnapshot(snapshot => {
+        sampleData.properties = snapshot.docs.map(doc => doc.data());
+        console.log('Updated properties:', sampleData.properties);
+    });
+
+    // Load products collection
+    db.collection('products').onSnapshot(snapshot => {
+        snapshot.docs.forEach(doc => {
+            let productData = doc.data();
+            sampleData.products[productData.category] = sampleData.products[productData.category] || [];
+            sampleData.products[productData.category].push(productData);
+        });
+        console.log('Updated products:', sampleData.products);
+    });
+
+    // Load services collection
+    db.collection('services').onSnapshot(snapshot => {
+        snapshot.docs.forEach(doc => {
+            let serviceData = doc.data();
+            sampleData.services[serviceData.category] = serviceData.description;
+        });
+        console.log('Updated services:', sampleData.services);
+    });
+
+    // Text-to-Speech functionality
+    const synth = window.speechSynthesis;
+    let isFirstTouch = true;
+    
+function speakWelcomeMessage() {
+        const welcomeMessage = "Hello, this is The Real Fintech AI Company. I can help with searching anything on this website: buy, sell, or rent properties? Check out products & services? Find PG or hostel? You can search anything and place an order through voice command.";
+        
+        const utterance = new SpeechSynthesisUtterance(welcomeMessage);
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+        utterance.volume = 0.9;
+        utterance.lang = 'en-US'; // Set to English
+        
+        // Use an English voice if available
+        const voices = synth.getVoices();
+        const englishVoice = voices.find(voice => voice.lang.includes('en-US'));
+        
+        if (englishVoice) {
+            utterance.voice = englishVoice;
+        }
+        
+        synth.speak(utterance);
+        
+        utterance.onend = function() {
+            // After welcome message, start listening
+            setTimeout(() => {
+                if (recognition) {
+                    startVoiceRecognition();
+                } else {
+                    simulateVoiceRecognition();
+                }
+            }, 500);
+        };
+    }
 
     // Handle voice search button click
     voiceSearchBtn.addEventListener('click', function () {
-        if (recognition) {
-            startVoiceRecognition();
+        if (isFirstTouch) {
+            isFirstTouch = false;
+        voiceSearchBtn.innerHTML = '\u003ci class="fas fa-microphone"\u003e\u003c/i\u003e\u003cspan\u003eListening...\u003c/span\u003e';
+
+            speakWelcomeMessage();
         } else {
-            // Fallback for browsers without speech recognition
-            simulateVoiceRecognition();
+            if (recognition) {
+                startVoiceRecognition();
+            } else {
+                simulateVoiceRecognition();
+            }
         }
     });
 
+    // Advanced AI features setup
+    
+    // Initialize Chatbot
+    function initChatbot() {
+        const chatbot = document.createElement('script');
+        chatbot.src = 'https://example.com/chatbot-sdk.js'; // Hypothetical URL
+        document.body.appendChild(chatbot);
+        chatbot.onload = function() {
+            // Initialize chatbot interface
+            window.launchChatbot({
+                token: 'YOUR_ACCESS_TOKEN',
+                theme: 'light',
+                language: 'en',
+                aiFeatures: ['recommendations', 'smart-assist']
+            });
+        };
+    }
+
+    // AI-Powered Recommendations
+    function getAIRecommendations(query) {
+        if (!query) {
+            console.error('Invalid query for AI recommendations');
+            return '<p>No recommendations available</p>';
+        }
+        // Simulate fetching recommendations
+        let recommendations = [
+            'Luxury Villa',
+            'Eco-Friendly Apartments',
+            'Pre-Approved Loan Offers'
+        ];
+        let recommendationHTML = '<div class="ai-recommendations">';
+            recommendationHTML += '<h4>Recommended for you:</h4><ul>';
+            recommendations.forEach(item => {
+                recommendationHTML += '<li>' + item + '</li>';
+            });
+            recommendationHTML += '</ul></div>';
+        return recommendationHTML;
+    }
+    
+    // Smart Contract Simulation
+    function simulateSmartContract() {
+        console.log('Simulating smart contracts for real estate deals...');
+        // Mockup for smart contract interaction
+        return '<h5>Smart Contract Summary:</h5>' +
+               '<p>Agreement ID: SC123456</p>' +
+               '<p>Terms verified: 100%</p>' +
+               '<p>Status: Executed Successfully</p>';
+    }
+
+    // Enhanced voice query processing
+    function processEnhancedQuery(query) {
+        console.log('Enhanced processing for query:', query);
+        let enhancedResults = generateEnhancedAIResponse(query);
+        enhancedResults += getAIRecommendations(query);
+        enhancedResults += simulateSmartContract();
+        voiceResultModal.style.display = 'block';
+        voiceSearchResults.innerHTML = enhancedResults;
+    }
+
+    initChatbot();  // Initialize chatbot when the script loads
+
+    function generateEnhancedAIResponse(query) {
+        let response = '\u003cdiv class="ai-response"\u003e';
+        response += '\u003ch3i class="fas fa-robot"\u003e\u003c/i\u003e AI Enhanced Response\u003c/h3\u003e';
+        response += '\u003cdiv class="query-display"\u003eYou asked: "' + query + '"\u003c/div\u003e';
+        if (query.includes('bungalow') || query.includes('villa') || query.includes('mansion')) {
+            response += '\u003cdiv class="result-section"\u003e';
+            response += '\u003ch4\u003e\u003ci class="fas fa-home"\u003e\u003c/i\u003e Properties Found\u003c/h4\u003e';
+            sampleData.properties.forEach(prop => {
+                if (prop.type.includes('Villa') || prop.type.includes('Bungalow')) {
+                    response += `\u003cdiv class="property-card"\u003e`;
+                    response += `\u003ch5\u003e${prop.type}\u003c/h5\u003e`;
+                    response += `\u003cp\u003e\u003cstrong\u003ePrice:\u003c/strong\u003e ${prop.price}\u003c/p\u003e`;
+                    response += `\u003cp\u003e\u003cstrong\u003eLocation:\u003c/strong\u003e ${prop.location}\u003c/p\u003e`;
+                    response += `\u003cbutton class="btn-primary" onclick="alert('Contact us for more details!')"\u003eContact Now\u003c/button\u003e`;
+                    response += `\u003c/div\u003e`;
+                }
+            });
+            response += '\u003c/div\u003e';
+        }
+        if (!response.includes('result-section')) {
+            response += '\u003cdiv class="result-section"\u003e';
+            response += '\u003ch4\u003e\u003ci class="fas fa-info-circle"\u003e\u003c/i\u003e How Can We Help?\u003c/h4\u003e';
+            response += '\u003cp\u003eI can help you with enhanced features:\u003c/p\u003e';
+            response += '\u003cul\u003e';
+            response += '\u003cli\u003eFinding bungalows and mansions\u003c/li\u003e';
+            response += '\u003c/ul\u003e';
+            response += '\u003cp\u003eTry saying something like:\u003c/p\u003e';
+            response += '\u003cul\u003e';
+            response += '\u003cli\u003e"Show me bungalows in Mumbai"\u003c/li\u003e';
+            response += '\u003c/ul\u003e';
+            response += '\u003c/div\u003e';
+        }
+        response += '\u003cdiv class="contact-cta"\u003e';
+        response += '\u003cp\u003e\u003cstrong\u003eReady to proceed?\u003c/strong\u003e\u003c/p\u003e';
+        response += '\u003cdiv class="cta-buttons"\u003e';
+        response += '\u003cbutton class="btn-primary" onclick="window.location.href=\'#contact\'; closeModal(\'voiceResultModal\');"\u003eContact Us\u003c/button\u003e';
+        response += '\u003cbutton class="btn-secondary" onclick="closeModal(\'voiceResultModal\');"\u003eSearch Again\u003c/button\u003e';
+        response += '\u003c/div\u003e';
+        response += '\u003c/div\u003e';
+        response += '\u003c/div\u003e';
+        return response;
+    }
+
     function startVoiceRecognition() {
-        voiceSearchBtn.classList.add('listening');
         voiceSearchBtn.innerHTML = '<i class="fas fa-microphone"></i><span>Listening...</span>';
         
         recognition.start();
@@ -66,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Speech recognition error:', event.error);
             voiceSearchBtn.classList.remove('listening');
             voiceSearchBtn.innerHTML = '<i class="fas fa-microphone"></i><span>AI Voice Search</span>';
-            showError('Sorry, I couldn\'t hear you clearly. Please try again.');
+            showError('Sorry, I could not hear you clearly. Please try again.');
         };
         
         recognition.onend = function() {
@@ -78,7 +237,32 @@ document.addEventListener('DOMContentLoaded', function () {
     function processVoiceQuery(query) {
         console.log('Processing query:', query);
         
-        let results = generateAIResponse(query);
+        // Clean and normalize the query
+        const normalizedQuery = query.toLowerCase().trim();
+        
+        // Enhanced keyword detection
+        const keywords = {
+            buy: ['buy', 'purchase', 'buying', 'get', 'need', 'want'],
+            sell: ['sell', 'selling', 'sale'],
+            rent: ['rent', 'rental', 'renting', 'lease'],
+            property: ['house', 'home', 'flat', 'apartment', 'property', 'plot', 'land', 'building'],
+            location: ['mumbai', 'delhi', 'bhavnagar', 'ahmedabad', 'surat', 'bangalore', 'pune', 'hyderabad'],
+            products: ['solar', 'panel', 'battery', 'door', 'furniture', 'inverter', 'system']
+        };
+        
+        // Check for enhanced queries
+        const isBuyQuery = keywords.buy.some(keyword => normalizedQuery.includes(keyword));
+        const isSellQuery = keywords.sell.some(keyword => normalizedQuery.includes(keyword));
+        const isRentQuery = keywords.rent.some(keyword => normalizedQuery.includes(keyword));
+        
+        if (isBuyQuery || isSellQuery || isRentQuery) {
+            let enhancedResults = generateEnhancedAIResponse(normalizedQuery, {isBuy: isBuyQuery, isSell: isSellQuery, isRent: isRentQuery});
+            voiceResultModal.style.display = 'block';
+            voiceSearchResults.innerHTML = enhancedResults;
+            return;
+        }
+        
+        let results = generateAIResponse(normalizedQuery);
         
         voiceResultModal.style.display = 'block';
         voiceSearchResults.innerHTML = results;
@@ -192,7 +376,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 2000);
     }
 
-    function showError(message) {
+function showError(message) {
         voiceResultModal.style.display = 'block';
         voiceSearchResults.innerHTML = `
             <div class="error-message">
@@ -254,7 +438,58 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Form submissions
+    // Firebase Authentication Handling
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const userType = document.getElementById('loginUserType').value;
+            // Firebase login function
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Successful login logic, redirect, or display dashboard
+                    alert('Welcome back, ' + userCredential.user.email + ' as ' + userType);
+                })
+                .catch((error) => {
+                    console.error('Login error', error);
+                    alert('Login failed: ' + error.message);
+                });
+        });
+    }
+    
+    if (signupForm) {
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fullName = document.getElementById('signupFullName').value;
+            const email = document.getElementById('signupEmail').value;
+            const phone = document.getElementById('signupPhone').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const userType = document.getElementById('signupUserType').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            // Firebase sign-up function
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Successful sign-up logic, save additional user data
+                    alert('Welcome, ' + fullName + ' as ' + userType);
+                    // Optionally store additional user data in Firebase database
+                })
+                .catch((error) => {
+                    console.error('Signup error', error);
+                    alert('Signup failed: ' + error.message);
+                });
+        });
+    }
+
+    // Contact form handling
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {

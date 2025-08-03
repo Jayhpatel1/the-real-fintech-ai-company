@@ -1,3 +1,87 @@
+// Authentication and User Management
+let currentUser = null;
+let userProfile = null;
+
+// Firebase Configuration (Replace with your actual Firebase config)
+const firebaseConfig = {
+    apiKey: "your-api-key-here",
+    authDomain: "your-project.firebaseapp.com",
+    projectId: "your-project-id",
+    storageBucket: "your-project.appspot.com",
+    messagingSenderId: "your-sender-id",
+    appId: "your-app-id"
+};
+
+// Initialize Firebase (only if firebase is loaded)
+if (typeof firebase !== 'undefined') {
+    try {
+        firebase.initializeApp(firebaseConfig);
+        window.auth = firebase.auth();
+        window.db = firebase.firestore();
+        
+        // Auth state listener
+        auth.onAuthStateChanged((user) => {
+            currentUser = user;
+            updateNavigation();
+        });
+    } catch (error) {
+        console.log('Firebase not available or already initialized');
+    }
+}
+
+// Authentication Functions
+function signUp(email, password, userData) {
+    if (typeof firebase === 'undefined') {
+        alert('Firebase not available. Using demo mode.');
+        return Promise.resolve();
+    }
+    return auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            return db.collection('users').doc(userCredential.user.uid).set({
+                ...userData,
+                email: email,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        });
+}
+
+function signIn(email, password) {
+    if (typeof firebase === 'undefined') {
+        alert('Firebase not available. Using demo mode.');
+        currentUser = { email: email, uid: 'demo-user' };
+        updateNavigation();
+        return Promise.resolve();
+    }
+    return auth.signInWithEmailAndPassword(email, password);
+}
+
+function signOut() {
+    if (typeof firebase === 'undefined') {
+        currentUser = null;
+        updateNavigation();
+        return Promise.resolve();
+    }
+    return auth.signOut();
+}
+
+// Update Navigation based on auth state
+function updateNavigation() {
+    const navButtons = document.querySelector('.nav-buttons');
+    if (!navButtons) return;
+    
+    if (currentUser) {
+        navButtons.innerHTML = `
+            <button class="btn-secondary" onclick="showDashboard()">Dashboard</button>
+            <button class="btn-primary" onclick="handleSignOut()">Logout</button>
+        `;
+    } else {
+        navButtons.innerHTML = `
+            <button class="btn-secondary" onclick="openModal('loginModal')">Login</button>
+            <button class="btn-primary" onclick="openModal('signupModal')">Sign Up</button>
+        `;
+    }
+}
+
 // JavaScript for The Real Fintech AI Company Website
 
 document.addEventListener('DOMContentLoaded', function () {
