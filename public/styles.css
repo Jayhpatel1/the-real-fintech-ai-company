@@ -251,46 +251,28 @@ background: linear-gradient(135deg, var(--saffron) 0%, var(--golden) 100%);
 
 /* APPLE-STYLE WATERY FLOATING STATS WINDOW - SAFFRON THEME */
 .floating-stats-window {
-    background: linear-gradient(145deg, 
-        rgba(244, 196, 48, 0.08) 0%, 
-        rgba(244, 196, 48, 0.15) 20%, 
-        rgba(244, 196, 48, 0.12) 40%, 
-        rgba(244, 196, 48, 0.18) 60%, 
-        rgba(244, 196, 48, 0.10) 80%, 
-        rgba(244, 196, 48, 0.14) 100%);
-    backdrop-filter: blur(40px) saturate(180%) brightness(1.2) contrast(1.1);
-    -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(1.2) contrast(1.1);
-    border: 1.5px solid rgba(244, 196, 48, 0.25);
-    border-radius: 32px;
-    padding: 36px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(20px) saturate(120%);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    padding: 24px;
     box-shadow: 
-        0 32px 64px rgba(244, 196, 48, 0.15),
-        0 16px 32px rgba(244, 196, 48, 0.12),
-        0 8px 16px rgba(244, 196, 48, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4),
-        inset 0 -1px 0 rgba(244, 196, 48, 0.2);
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 8px 16px rgba(0, 0, 0, 0.2);
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-    max-width: 480px;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    max-width: 300px;
     margin: 0 auto;
     position: relative;
     animation: appleUltraFloat 12s ease-in-out infinite;
-    transform-origin: center;
+    transform-origin: left;
     overflow: hidden;
 }
 
 .floating-stats-window::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, #F4C430 0%, #F4C430 25%, #F4C430 50%, #F4C430 75%, #F4C430 100%);
-    border-radius: 22px;
-    z-index: -1;
-    animation: saffronGradientShift 7s ease-in-out infinite;
+    display: none;
 }
 
 @keyframes floatAnimation {
@@ -308,23 +290,6 @@ background: linear-gradient(135deg, var(--saffron) 0%, var(--golden) 100%);
     }
 }
 
-@keyframes saffronGradientShift {
-    0% {
-        background: linear-gradient(45deg, #F4C430 0%, #F4C430 25%, #F4C430 50%, #F4C430 75%, #F4C430 100%);
-    }
-    25% {
-        background: linear-gradient(45deg, #F4C430 0%, #F4C430 25%, #F4C430 50%, #F4C430 75%, #F4C430 100%);
-    }
-    50% {
-        background: linear-gradient(45deg, #F4C430 0%, #F4C430 25%, #F4C430 50%, #F4C430 75%, #F4C430 100%);
-    }
-    75% {
-        background: linear-gradient(45deg, #F4C430 0%, #F4C430 25%, #F4C430 50%, #F4C430 75%, #F4C430 100%);
-    }
-    100% {
-        background: linear-gradient(45deg, #F4C430 0%, #F4C430 25%, #F4C430 50%, #F4C430 75%, #F4C430 100%);
-    }
-}
 
 /* Apple-style Ultra Float Animation */
 @keyframes appleUltraFloat {
@@ -377,85 +342,66 @@ background: linear-gradient(135deg, var(--saffron) 0%, var(--golden) 100%);
 }
 
 .floating-stats-window .stat {
-    text-align: center;
-    padding: 24px;
-    border-radius: 22px;
-    background: linear-gradient(145deg, 
-        rgba(244, 196, 48, 0.06) 0%, 
-        rgba(244, 196, 48, 0.12) 20%, 
-        rgba(244, 196, 48, 0.08) 40%, 
-        rgba(244, 196, 48, 0.15) 60%, 
-        rgba(244, 196, 48, 0.10) 80%, 
-        rgba(244, 196, 48, 0.14) 100%);
-    border: 1px solid rgba(244, 196, 48, 0.2);
-    backdrop-filter: blur(30px) saturate(160%) brightness(1.15);
-    -webkit-backdrop-filter: blur(30px) saturate(160%) brightness(1.15);
-    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transition: all 0.3s ease;
+    cursor: default;
     position: relative;
-    overflow: hidden;
-    box-shadow: 
-        0 12px 32px rgba(244, 196, 48, 0.08),
-        0 6px 16px rgba(244, 196, 48, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        inset 0 -1px 0 rgba(244, 196, 48, 0.15);
-}
-
-.floating-stats-window .stat::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: conic-gradient(transparent, rgba(244, 196, 48, 0.2), transparent);
-    animation: rotate 6s linear infinite;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.floating-stats-window .stat:hover::before {
-    opacity: 1;
+    overflow: visible;
+    box-shadow: none;
 }
 
 .floating-stats-window .stat:hover {
-    transform: translateY(-8px) scale(1.08);
-    background: linear-gradient(135deg, 
-        rgba(244, 196, 48, 0.6) 0%, 
-        rgba(244, 196, 48, 0.5) 25%, 
-        rgba(244, 196, 48, 0.55) 50%, 
-        rgba(244, 196, 48, 0.5) 75%, 
-        rgba(244, 196, 48, 0.65) 100%);
-    box-shadow: 
-        0 20px 40px rgba(244, 196, 48, 0.4),
-        0 10px 25px rgba(244, 196, 48, 0.3),
-        inset 0 2px 0 rgba(244, 196, 48, 0.8);
-    border-color: rgba(244, 196, 48, 0.8);
+    transform: none;
+    background: transparent;
+    box-shadow: none;
+    border-color: transparent;
+}
+
+.floating-stats-window .stat .stat-icon {
+    font-size: 2rem;
+    color: #ffffff;
+    filter: none;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    min-width: 40px;
+}
+
+.floating-stats-window .stat .stat-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .floating-stats-window .stat h3 {
-    font-size: 2rem;
-    font-weight: 900;
-    margin-bottom: 8px;
-    color: #F4C430;
-    text-shadow: 2px 2px 4px rgba(244, 196, 48, 0.3);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     position: relative;
     z-index: 1;
-    filter: drop-shadow(1px 1px 2px rgba(244, 196, 48, 0.8));
+    line-height: 1.2;
 }
 
 .floating-stats-window .stat p {
-    font-size: 0.95rem;
-    color: #F4C430;
-    font-weight: 800;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
     margin: 0;
-    text-shadow: 
-        1px 1px 2px rgba(244, 196, 48, 0.9), 
-        0 0 8px rgba(244, 196, 48, 0.7),
-        0 1px 0 rgba(244, 196, 48, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     position: relative;
     z-index: 1;
-    letter-spacing: 0.5px;
+    letter-spacing: 0;
+    line-height: 1.3;
 }
 
 /* Reset and Base Styles */
@@ -2648,22 +2594,25 @@ html {
     .floating-stats-window .stat {
         padding: 16px;
         border-radius: 16px;
-        background: linear-gradient(135deg, 
-            rgba(244, 196, 48, 0.5) 0%, 
-            rgba(244, 196, 48, 0.3) 25%, 
-            rgba(244, 196, 48, 0.4) 50%, 
-            rgba(244, 196, 48, 0.25) 75%, 
-            rgba(244, 196, 48, 0.45) 100%);
+        background: transparent;
     }
     
     .floating-stats-window .stat h3 {
         font-size: 1.7rem;
         margin-bottom: 6px;
+        color: #ffffff !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
     }
     
     .floating-stats-window .stat p {
         font-size: 0.85rem;
         font-weight: 800;
         letter-spacing: 0.3px;
+        color: rgba(255, 255, 255, 0.9) !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    .floating-stats-window .stat .stat-icon {
+        color: #ffffff !important;
     }
 }
