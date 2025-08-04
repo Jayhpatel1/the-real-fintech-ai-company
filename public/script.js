@@ -572,27 +572,34 @@ function showError(message) {
     // Mobile menu toggle - Fix hamburger functionality
     if (hamburger && navMenu) {
         console.log('✅ Hamburger menu initialized');
+        console.log('Hamburger element:', hamburger);
+        console.log('Nav menu element:', navMenu);
+        
         hamburger.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             console.log('🍔 Hamburger clicked - toggling menu');
             
             // Toggle active class on both elements
-            navMenu.classList.toggle('active');
-            hamburger.classList.toggle('active');
+            const isActive = navMenu.classList.contains('active');
             
-            // Log the current state
-            console.log('Menu active:', navMenu.classList.contains('active'));
-            console.log('Hamburger active:', hamburger.classList.contains('active'));
-            
-            // Add/remove mobile auth buttons
-            if (navMenu.classList.contains('active')) {
+            if (isActive) {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                removeMobileAuthButtons();
+                console.log('📱 Mobile menu closed');
+            } else {
+                navMenu.classList.add('active');
+                hamburger.classList.add('active');
                 addMobileAuthButtons();
                 console.log('📱 Mobile menu opened - added auth buttons');
-            } else {
-                removeMobileAuthButtons();
-                console.log('📱 Mobile menu closed - removed auth buttons');
             }
+            
+            // Force style update
+            navMenu.style.display = isActive ? 'none' : 'flex';
+            
+            console.log('Menu active:', navMenu.classList.contains('active'));
+            console.log('Hamburger active:', hamburger.classList.contains('active'));
         });
         
         // Close mobile menu when clicking outside
@@ -602,6 +609,7 @@ function showError(message) {
                     console.log('🔒 Closing menu - clicked outside');
                     navMenu.classList.remove('active');
                     hamburger.classList.remove('active');
+                    navMenu.style.display = 'none';
                     removeMobileAuthButtons();
                 }
             }
@@ -609,6 +617,7 @@ function showError(message) {
         
         // Make navigation links clickable
         const navLinks = navMenu.querySelectorAll('a');
+        console.log('Found navigation links:', navLinks.length);
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 // Don't prevent default for navigation - let links work
@@ -617,11 +626,37 @@ function showError(message) {
                 // Close mobile menu after link click
                 navMenu.classList.remove('active');
                 hamburger.classList.remove('active');
+                navMenu.style.display = 'none';
                 removeMobileAuthButtons();
             });
         });
+        
+        // Initialize hamburger visibility for mobile
+        function checkMobileView() {
+            if (window.innerWidth <= 768) {
+                hamburger.style.display = 'flex';
+                navMenu.style.display = navMenu.classList.contains('active') ? 'flex' : 'none';
+            } else {
+                hamburger.style.display = 'none';
+                navMenu.style.display = 'flex';
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                removeMobileAuthButtons();
+            }
+        }
+        
+        // Check on load and resize
+        checkMobileView();
+        window.addEventListener('resize', checkMobileView);
+        
     } else {
         console.error('❌ Hamburger or navMenu not found:', { hamburger, navMenu });
+        // Try to find elements again
+        setTimeout(() => {
+            const retryHamburger = document.querySelector('.hamburger');
+            const retryNavMenu = document.querySelector('.nav-menu');
+            console.log('🔄 Retry finding elements:', { retryHamburger, retryNavMenu });
+        }, 1000);
     }
     
     // Function to add Login & Signup buttons to mobile menu
