@@ -19,6 +19,11 @@
     --crystal-glass: rgba(255, 255, 255, 0.18);
     --premium-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     --floating-shadow: 0 20px 60px rgba(244, 164, 96, 0.15);
+    
+    /* Missing variables that were being used */
+    --saffron: #F4C430;             /* Same as saffron-primary */
+    --light-yellow: #FFFACD;        /* Lemon Chiffon */
+    --bright-yellow: #FFD700;       /* Gold - bright yellow accent */
 
     /* Floating window color cycle variables - Saffron Gold Theme */
     --primary-orange: #F4C430;      /* Saffron */
