@@ -524,21 +524,161 @@ function showError(message) {
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
     
+    // Authentication helper functions
+    function showAuthError(message) {
+        // Remove any existing error messages
+        const existingError = document.querySelector('.auth-error-message');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        // Create error message element
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'auth-error-message';
+        errorDiv.style.cssText = `
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 14px;
+            text-align: center;
+        `;
+        errorDiv.innerHTML = `
+            <i class="fas fa-exclamation-triangle"></i>
+            <span style="margin-left: 8px;">${message}</span>
+            <button onclick="this.parentElement.remove()" style="
+                float: right;
+                background: none;
+                border: none;
+                color: #c33;
+                cursor: pointer;
+                font-size: 16px;
+            ">×</button>
+        `;
+        
+        // Add to active modal
+        const activeModal = document.querySelector('.modal[style*="block"]');
+        if (activeModal) {
+            const modalContent = activeModal.querySelector('.modal-content');
+            const form = modalContent.querySelector('form');
+            if (form) {
+                form.insertBefore(errorDiv, form.firstChild);
+            }
+        }
+    }
+    
+    function showAuthSuccess(message) {
+        // Remove any existing messages
+        const existingMessages = document.querySelectorAll('.auth-error-message, .auth-success-message');
+        existingMessages.forEach(msg => msg.remove());
+        
+        // Create success message element
+        const successDiv = document.createElement('div');
+        successDiv.className = 'auth-success-message';
+        successDiv.style.cssText = `
+            background: #efe;
+            border: 1px solid #cfc;
+            color: #363;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 14px;
+            text-align: center;
+        `;
+        successDiv.innerHTML = `
+            <i class="fas fa-check-circle"></i>
+            <span style="margin-left: 8px;">${message}</span>
+        `;
+        
+        // Add to active modal
+        const activeModal = document.querySelector('.modal[style*="block"]');
+        if (activeModal) {
+            const modalContent = activeModal.querySelector('.modal-content');
+            const form = modalContent.querySelector('form');
+            if (form) {
+                form.insertBefore(successDiv, form.firstChild);
+            }
+        }
+    }
+    
+    function redirectAfterAuth(userType) {
+        // Show dashboard based on user type
+        const dashboard = document.getElementById('ai-dashboard');
+        if (dashboard) {
+            dashboard.style.display = 'block';
+            dashboard.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Future: Add specific redirects for different user types
+        console.log('Redirecting user type:', userType);
+    }
+    
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             const userType = document.getElementById('loginUserType').value;
+            
+            // Input validation
+            if (!email.trim()) {
+                showAuthError('Please enter your email address.');
+                return;
+            }
+            
+            if (!password.trim()) {
+                showAuthError('Please enter your password.');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Signing In...';
+            submitBtn.disabled = true;
+            
             // Firebase login function
             firebase.auth().signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    // Successful login logic, redirect, or display dashboard
-                    alert('Welcome back, ' + userCredential.user.email + ' as ' + userType);
+                    showAuthSuccess('Welcome back! Redirecting to your dashboard...');
+                    setTimeout(() => {
+                        closeModal('loginModal');
+                        redirectAfterAuth(userType);
+                    }, 1500);
                 })
                 .catch((error) => {
                     console.error('Login error', error);
-                    alert('Login failed: ' + error.message);
+                    let errorMessage = 'Login failed. Please try again.';
+                    
+                    // Handle specific error codes
+                    switch(error.code) {
+                        case 'auth/user-not-found':
+                            errorMessage = 'No account found with this email. Please sign up first.';
+                            break;
+                        case 'auth/wrong-password':
+                            errorMessage = 'Incorrect password. Please try again.';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage = 'Please enter a valid email address.';
+                            break;
+                        case 'auth/too-many-requests':
+                            errorMessage = 'Too many failed attempts. Please try again later.';
+                            break;
+                        case 'auth/network-request-failed':
+                            errorMessage = 'Network error. Please check your internet connection.';
+                            break;
+                        default:
+                            errorMessage = error.message;
+                    }
+                    
+                    showAuthError(errorMessage);
+                })
+                .finally(() => {
+                    // Reset button state
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                 });
         });
     }
@@ -553,20 +693,92 @@ function showError(message) {
             const confirmPassword = document.getElementById('signupConfirmPassword').value;
             const userType = document.getElementById('signupUserType').value;
             
-            if (password !== confirmPassword) {
-                alert('Passwords do not match');
+            // Input validation
+            if (!fullName.trim()) {
+                showAuthError('Please enter your full name.');
                 return;
             }
+            
+            if (!email.trim()) {
+                showAuthError('Please enter your email address.');
+                return;
+            }
+            
+            if (!phone.trim()) {
+                showAuthError('Please enter your phone number.');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showAuthError('Password must be at least 6 characters long.');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showAuthError('Passwords do not match.');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = signupForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Creating Account...';
+            submitBtn.disabled = true;
+            
             // Firebase sign-up function
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    // Successful sign-up logic, save additional user data
-                    alert('Welcome, ' + fullName + ' as ' + userType);
-                    // Optionally store additional user data in Firebase database
+                    // Store additional user data in Firestore
+                    const user = userCredential.user;
+                    const userData = {
+                        uid: user.uid,
+                        email: email,
+                        fullName: fullName,
+                        phone: phone,
+                        userType: userType,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        profileComplete: false
+                    };
+                    
+                    // Save to Firestore
+                    return db.collection('users').doc(user.uid).set(userData);
+                })
+                .then(() => {
+                    showAuthSuccess('Account created successfully! Welcome to The Real Fintech AI Company!');
+                    setTimeout(() => {
+                        closeModal('signupModal');
+                        // Redirect based on user type
+                        redirectAfterAuth(userType);
+                    }, 2000);
                 })
                 .catch((error) => {
                     console.error('Signup error', error);
-                    alert('Signup failed: ' + error.message);
+                    let errorMessage = 'Signup failed. Please try again.';
+                    
+                    // Handle specific error codes
+                    switch(error.code) {
+                        case 'auth/email-already-in-use':
+                            errorMessage = 'This email is already registered. Please use the Login form or try a different email address.';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage = 'Please enter a valid email address.';
+                            break;
+                        case 'auth/weak-password':
+                            errorMessage = 'Password is too weak. Please choose a stronger password.';
+                            break;
+                        case 'auth/network-request-failed':
+                            errorMessage = 'Network error. Please check your internet connection and try again.';
+                            break;
+                        default:
+                            errorMessage = error.message;
+                    }
+                    
+                    showAuthError(errorMessage);
+                })
+                .finally(() => {
+                    // Reset button state
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                 });
         });
     }
