@@ -1,6 +1,67 @@
 // JavaScript for The Real Fintech AI Company Website
 
+// Ensure functions are available immediately - before DOM loads
+(function() {
+    'use strict';
+    
+    // Global modal functions - Available immediately
+    window.openModal = function(modalId) {
+        console.log('🔓 Opening modal:', modalId);
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'block';
+            modal.style.opacity = '0';
+            document.body.style.overflow = 'hidden';
+            
+            // Fade in animation
+            setTimeout(() => {
+                modal.style.opacity = '1';
+            }, 10);
+            
+            console.log('✅ Modal opened successfully:', modalId);
+        } else {
+            console.error('❌ Modal not found:', modalId);
+            alert('Modal not found: ' + modalId);
+        }
+    };
+
+    window.closeModal = function(modalId) {
+        console.log('🔒 Closing modal:', modalId);
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            // Fade out animation
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 200);
+            console.log('✅ Modal closed successfully:', modalId);
+        }
+    };
+    
+    // Test function to verify functions are working
+    window.testModal = function() {
+        console.log('🧪 Testing modal functions...');
+        alert('Modal functions are loaded and working!');
+    };
+    
+    console.log('🚀 Modal functions loaded immediately');
+})();
+
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('🚀 DOMContentLoaded - Script initialized');
+    
+    // Log all important elements to debug
+    console.log('🔍 Debugging elements:', {
+        loginModal: document.getElementById('loginModal'),
+        signupModal: document.getElementById('signupModal'),
+        loginBtn: document.querySelector('button[onclick*="loginModal"]'),
+        signupBtn: document.querySelector('button[onclick*="signupModal"]'),
+        authButtons: document.getElementById('authButtons'),
+        hamburger: document.querySelector('.hamburger'),
+        navMenu: document.querySelector('.nav-menu')
+    });
+    
     const voiceSearchBtn = document.getElementById('topVoiceSearchBtn');
     const voiceResultModal = document.getElementById('voiceResultModal');
     const voiceSearchResults = document.getElementById('voiceSearchResults');
@@ -9,6 +70,47 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeButtons = document.querySelectorAll('.close');
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
+    
+    // Test modal functions immediately
+    console.log('🧪 Testing if modal functions are accessible:', {
+        openModal: typeof window.openModal,
+        closeModal: typeof window.closeModal,
+        testModal: typeof window.testModal
+    });
+    
+    // Add event listeners directly to buttons as backup
+    const loginButton = document.querySelector('button[onclick*="loginModal"]');
+    const signupButton = document.querySelector('button[onclick*="signupModal"]');
+    
+    if (loginButton) {
+        console.log('✅ Adding backup event listener to login button');
+        loginButton.addEventListener('click', function(e) {
+            console.log('🔘 Login button clicked (backup handler)');
+            e.preventDefault();
+            e.stopPropagation();
+            // Add active state
+            loginButton.classList.add('active');
+            setTimeout(() => loginButton.classList.remove('active'), 300);
+            openModal('loginModal');
+        });
+    } else {
+        console.error('❌ Login button not found!');
+    }
+    
+    if (signupButton) {
+        console.log('✅ Adding backup event listener to signup button');
+        signupButton.addEventListener('click', function(e) {
+            console.log('🔘 Signup button clicked (backup handler)');
+            e.preventDefault();
+            e.stopPropagation();
+            // Add active state
+            signupButton.classList.add('active');
+            setTimeout(() => signupButton.classList.remove('active'), 300);
+            openModal('signupModal');
+        });
+    } else {
+        console.error('❌ Signup button not found!');
+    }
 
     // Voice Recognition Support
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -21,8 +123,25 @@ document.addEventListener('DOMContentLoaded', function () {
         recognition.lang = 'en-US'; // English language recognition
     }
 
-// Firebase real-time data update sample
-    const db = firebase.firestore();
+// Firebase real-time data update sample - Initialize with error handling
+    let db;
+    try {
+        db = firebase.firestore();
+        console.log('✅ Firebase Firestore initialized successfully');
+    } catch (error) {
+        console.error('❌ Error initializing Firebase Firestore:', error);
+        // Create a fallback object to prevent errors
+        db = {
+            collection: () => ({
+                doc: () => ({
+                    get: () => Promise.resolve({ exists: false }),
+                    set: () => Promise.resolve(),
+                    onSnapshot: () => {}
+                }),
+                onSnapshot: () => {}
+            })
+        };
+    }
 
     // Fetching properties and products from Firebase
     const sampleData = {
@@ -31,30 +150,59 @@ document.addEventListener('DOMContentLoaded', function () {
         services: {}
     };
 
-    // Load properties collection
-    db.collection('properties').onSnapshot(snapshot => {
-        sampleData.properties = snapshot.docs.map(doc => doc.data());
-        console.log('Updated properties:', sampleData.properties);
-    });
-
-    // Load products collection
-    db.collection('products').onSnapshot(snapshot => {
-        snapshot.docs.forEach(doc => {
-            let productData = doc.data();
-            sampleData.products[productData.category] = sampleData.products[productData.category] || [];
-            sampleData.products[productData.category].push(productData);
+    // Load data collections with error handling
+    try {
+        // Load properties collection
+        db.collection('properties').onSnapshot(snapshot => {
+            sampleData.properties = snapshot.docs.map(doc => doc.data());
+            console.log('Updated properties:', sampleData.properties);
+        }, error => {
+            console.warn('Properties collection not available:', error);
+            // Fallback data
+            sampleData.properties = [
+                { type: '2 BHK Apartment', price: '₹45 Lakhs', location: 'Mumbai', area: '850 sq ft' },
+                { type: '3 BHK Villa', price: '₹1.2 Cr', location: 'Delhi', area: '1200 sq ft' }
+            ];
         });
-        console.log('Updated products:', sampleData.products);
-    });
 
-    // Load services collection
-    db.collection('services').onSnapshot(snapshot => {
-        snapshot.docs.forEach(doc => {
-            let serviceData = doc.data();
-            sampleData.services[serviceData.category] = serviceData.description;
+        // Load products collection
+        db.collection('products').onSnapshot(snapshot => {
+            snapshot.docs.forEach(doc => {
+                let productData = doc.data();
+                sampleData.products[productData.category] = sampleData.products[productData.category] || [];
+                sampleData.products[productData.category].push(productData);
+            });
+            console.log('Updated products:', sampleData.products);
+        }, error => {
+            console.warn('Products collection not available:', error);
         });
-        console.log('Updated services:', sampleData.services);
-    });
+
+        // Load services collection
+        db.collection('services').onSnapshot(snapshot => {
+            snapshot.docs.forEach(doc => {
+                let serviceData = doc.data();
+                sampleData.services[serviceData.category] = serviceData.description;
+            });
+            console.log('Updated services:', sampleData.services);
+        }, error => {
+            console.warn('Services collection not available:', error);
+        });
+    } catch (error) {
+        console.warn('Firebase collections not available, using fallback data:', error);
+        // Initialize with fallback data
+        sampleData.properties = [
+            { type: '2 BHK Apartment', price: '₹45 Lakhs', location: 'Mumbai', area: '850 sq ft' },
+            { type: '3 BHK Villa', price: '₹1.2 Cr', location: 'Delhi', area: '1200 sq ft' }
+        ];
+        sampleData.products = {
+            solar: [{ name: 'Solar Panel 500W', price: '₹15,000', efficiency: '22%' }],
+            furniture: [{ name: 'Luxury Sofa Set', price: '₹85,000', material: 'Leather' }]
+        };
+        sampleData.services = {
+            construction: 'Complete construction services with experienced professionals',
+            renovation: 'Home renovation and remodeling services'
+        };
+    }
 
     // Text-to-Speech functionality
     const synth = window.speechSynthesis;
@@ -274,6 +422,12 @@ function speakWelcomeMessage() {
         voiceSearchResults.innerHTML = results;
     }
 
+    // Add missing function declarations for global context
+    window.performAdvancedSearch = performAdvancedSearch;
+    window.resetFilters = resetFilters;
+    window.applySuggestion = applySuggestion;
+    window.changeStep = changeStep;
+
     function generateAIResponse(query) {
         let response = '<div class="ai-response">';
         response += '<h3><i class="fas fa-robot"></i> AI Assistant Response</h3>';
@@ -393,14 +547,7 @@ function showError(message) {
         `;
     }
 
-    // Modal functions
-    window.openModal = function(modalId) {
-        document.getElementById(modalId).style.display = 'block';
-    };
-
-    window.closeModal = function(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    };
+    // Modal functions are already defined globally above
 
     // Handle modal closing
     closeButtons.forEach(button => {
@@ -422,19 +569,59 @@ function showError(message) {
         }
     };
 
-    // Mobile menu toggle
-    if (hamburger) {
-        hamburger.addEventListener('click', function() {
+    // Mobile menu toggle - Fix hamburger functionality
+    if (hamburger && navMenu) {
+        console.log('✅ Hamburger menu initialized');
+        hamburger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('🍔 Hamburger clicked - toggling menu');
+            
+            // Toggle active class on both elements
             navMenu.classList.toggle('active');
             hamburger.classList.toggle('active');
+            
+            // Log the current state
+            console.log('Menu active:', navMenu.classList.contains('active'));
+            console.log('Hamburger active:', hamburger.classList.contains('active'));
             
             // Add/remove mobile auth buttons
             if (navMenu.classList.contains('active')) {
                 addMobileAuthButtons();
+                console.log('📱 Mobile menu opened - added auth buttons');
             } else {
                 removeMobileAuthButtons();
+                console.log('📱 Mobile menu closed - removed auth buttons');
             }
         });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+                if (navMenu.classList.contains('active')) {
+                    console.log('🔒 Closing menu - clicked outside');
+                    navMenu.classList.remove('active');
+                    hamburger.classList.remove('active');
+                    removeMobileAuthButtons();
+                }
+            }
+        });
+        
+        // Make navigation links clickable
+        const navLinks = navMenu.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Don't prevent default for navigation - let links work
+                console.log('📍 Navigation link clicked:', this.textContent);
+                
+                // Close mobile menu after link click
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                removeMobileAuthButtons();
+            });
+        });
+    } else {
+        console.error('❌ Hamburger or navMenu not found:', { hamburger, navMenu });
     }
     
     // Function to add Login & Signup buttons to mobile menu
@@ -469,9 +656,13 @@ function showError(message) {
             transition: all 0.3s ease;
         `;
         loginBtn.onclick = function() {
+            // Add active state
+            loginBtn.classList.add('active');
+            setTimeout(() => loginBtn.classList.remove('active'), 300);
             openModal('loginModal');
             navMenu.classList.remove('active');
             hamburger.classList.remove('active');
+            removeMobileAuthButtons();
         };
         
         const signupBtn = document.createElement('button');
@@ -488,9 +679,13 @@ function showError(message) {
             transition: all 0.3s ease;
         `;
         signupBtn.onclick = function() {
+            // Add active state
+            signupBtn.classList.add('active');
+            setTimeout(() => signupBtn.classList.remove('active'), 300);
             openModal('signupModal');
             navMenu.classList.remove('active');
             hamburger.classList.remove('active');
+            removeMobileAuthButtons();
         };
         
         mobileAuthContainer.appendChild(loginBtn);
@@ -520,9 +715,10 @@ function showError(message) {
         });
     });
 
-    // Firebase Authentication State Listener
-    firebase.auth().onAuthStateChanged((user) => {
-        console.log('🔥 Firebase Auth State Changed:', user ? `User logged in: ${user.email}` : 'User logged out');
+    // Firebase Authentication State Listener with error handling
+    try {
+        firebase.auth().onAuthStateChanged((user) => {
+            console.log('🔥 Firebase Auth State Changed:', user ? `User logged in: ${user.email}` : 'User logged out');
         
         if (user) {
             // User is signed in
@@ -630,7 +826,15 @@ function showError(message) {
                 console.log('✅ Showing home section');
             }
         }
-    });
+        });
+    } catch (error) {
+        console.error('❌ Firebase Auth not available:', error);
+        // Show auth buttons by default if Firebase is not available
+        const authButtons = document.getElementById('authButtons');
+        if (authButtons) {
+            authButtons.style.display = 'flex';
+        }
+    }
     
     // Firebase Authentication Handling
     const loginForm = document.getElementById('loginForm');
@@ -830,6 +1034,33 @@ function showError(message) {
     };
     
     window.logoutUser = function() {
+        if (typeof firebase === 'undefined' || !firebase.auth) {
+            console.warn('Firebase not available, performing client-side logout');
+            // Perform client-side logout
+            currentUser = null;
+            currentUserData = null;
+            
+            // Reset UI to logged out state
+            const authButtons = document.getElementById('authButtons');
+            const navUserProfile = document.getElementById('navUserProfile');
+            const userProfileHeader = document.getElementById('userProfileHeader');
+            
+            if (authButtons) authButtons.style.display = 'flex';
+            if (navUserProfile) navUserProfile.style.display = 'none';
+            if (userProfileHeader) userProfileHeader.style.display = 'none';
+            
+            // Hide all dashboards and show home
+            const dashboards = document.querySelectorAll('.user-dashboard');
+            dashboards.forEach(dashboard => dashboard.style.display = 'none');
+            
+            const homeSection = document.getElementById('home');
+            if (homeSection) homeSection.style.display = 'block';
+            
+            alert('Logged out successfully!');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        
         firebase.auth().signOut().then(() => {
             // Hide user profile and dashboards
             document.getElementById('navUserProfile').style.display = 'none';
@@ -1096,7 +1327,12 @@ function showError(message) {
             submitBtn.textContent = 'Signing In...';
             submitBtn.disabled = true;
             
-            // Firebase login function
+            // Firebase login function with error handling
+            if (typeof firebase === 'undefined' || !firebase.auth) {
+                showAuthError('Firebase authentication is not available. Please refresh the page and try again.');
+                return;
+            }
+            
             firebase.auth().signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     showAuthSuccess('Welcome back! Redirecting to your dashboard...');
@@ -1182,7 +1418,12 @@ function showError(message) {
             submitBtn.textContent = 'Creating Account...';
             submitBtn.disabled = true;
             
-            // Firebase sign-up function
+            // Firebase sign-up function with error handling
+            if (typeof firebase === 'undefined' || !firebase.auth) {
+                showAuthError('Firebase authentication is not available. Please refresh the page and try again.');
+                return;
+            }
+            
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     // Store additional user data in Firestore
