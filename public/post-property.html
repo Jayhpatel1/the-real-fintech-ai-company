@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Post Your Property - The Real Fintech AI Company</title>
+    <meta name="description" content="Post your property for sale or rent with zero brokerage. AI-powered listing with maximum visibility.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css?v=2025080405">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .post-property-hero {
+            background: linear-gradient(135deg, var(--saffron-primary) 0%, var(--golden) 50%, var(--saffron-bright) 100%);
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+        }
+        
+        .listing-form-container {
+            background: var(--glass-white);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: -50px auto 50px;
+            max-width: 1000px;
+            box-shadow: var(--premium-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .form-step {
+            display: none;
+        }
+        
+        .form-step.active {
+            display: block;
+            animation: slideIn 0.5s ease-in-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(244, 196, 48, 0.3);
+            color: var(--deep-blue);
+            font-weight: 700;
+            position: relative;
+        }
+        
+        .step.active {
+            background: var(--saffron-primary);
+            color: white;
+        }
+        
+        .step.completed {
+            background: var(--accent-blue);
+            color: white;
+        }
+        
+        .step::after {
+            content: '';
+            position: absolute;
+            right: -25px;
+            width: 30px;
+            height: 2px;
+            background: rgba(244, 196, 48, 0.3);
+        }
+        
+        .step:last-child::after {
+            display: none;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--deep-blue);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 15px;
+            border: 2px solid rgba(244, 196, 48, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--saffron-primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.2);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .checkbox-item:hover {
+            background: rgba(244, 196, 48, 0.1);
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--saffron-primary);
+        }
+        
+        .upload-zone {
+            border: 3px dashed rgba(244, 196, 48, 0.5);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .upload-zone:hover {
+            border-color: var(--saffron-primary);
+            background: rgba(244, 196, 48, 0.1);
+        }
+        
+        .upload-zone i {
+            font-size: 48px;
+            color: var(--saffron-primary);
+            margin-bottom: 15px;
+        }
+        
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        
+        .btn-prev,
+        .btn-next {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-prev {
+            background: var(--deep-blue);
+            color: white;
+        }
+        
+        .btn-next {
+            background: var(--saffron-primary);
+            color: white;
+        }
+        
+        .btn-prev:hover {
+            background: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+        
+        .btn-next:hover {
+            background: var(--golden);
+            transform: translateY(-2px);
+        }
+        
+        .pricing-calculator {
+            background: linear-gradient(135deg, rgba(0, 0, 255, 0.1) 0%, rgba(47, 79, 79, 0.1) 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(0, 0, 255, 0.2);
+        }
+        
+        .ai-price-suggestion {
+            background: var(--accent-blue);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+        
+        .success-message i {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <div class="logo-container">
+                        <div class="logo-square"></div>
+                        <h2>The Real Fintech AI</h2>
+                    </div>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="properties.html">Properties</a></li>
+                    <li><a href="advanced-search.html">Advanced Search</a></li>
+                    <li><a href="post-property.html" class="active">Post Property</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <button class="btn-secondary" onclick="openModal('loginModal')">Login</button>
+                    <button class="btn-primary" onclick="openModal('signupModal')">Sign Up</button>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Post Property Hero -->
+    <section class="post-property-hero">
+        <div class="container">
+            <h1>🏠 Post Your Property</h1>
+            <p>List your property with zero brokerage and maximum visibility using AI technology</p>
+        </div>
+    </section>
+
+    <!-- Property Listing Form -->
+    <section class="listing-form-section">
+        <div class="container">
+            <div class="listing-form-container">
+                <div class="step-indicator">
+                    <div class="step active" id="step1">1</div>
+                    <div class="step" id="step2">2</div>
+                    <div class="step" id="step3">3</div>
+                    <div class="step" id="step4">4</div>
+                </div>
+
+                <form id="propertyListingForm">
+                    <!-- Step 1: Basic Information -->
+                    <div class="form-step active" id="formStep1">
+                        <h2 style="text-align: center; margin-bottom: 30px; color: var(--deep-blue);">
+                            <i class="fas fa-info-circle"></i> Basic Property Information
+                        </h2>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="propertyPurpose">Property Purpose *</label>
+                                <select id="propertyPurpose" name="propertyPurpose" required>
+                                    <option value="">Select Purpose</option>
+                                    <option value="sale">For Sale</option>
+                                    <option value="rent">For Rent</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="propertyType">Property Type *</label>
+                                <select id="propertyType" name="propertyType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="apartment">Apartment</option>
+                                    <option value="flat">Flat</option>
+                                    <option value="villa">Villa</option>
+                                    <option value="bungalow">Bungalow</option>
+                                    <option value="farmhouse">Farm House</option>
+                                    <option value="commercial">Commercial</option>
+                                    <option value="plot">Plot/Land</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="bhkType">BHK Configuration</label>
+                                <select id="bhkType" name="bhkType">
+                                    <option value="">Select BHK</option>
+                                    <option value="1bhk">1 BHK</option>
+                                    <option value="2bhk">2 BHK</option>
+                                    <option value="3bhk">3 BHK</option>
+                                    <option value="4bhk">4 BHK</option>
+                                    <option value="5bhk">5+ BHK</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="propertyTitle">Property Title *</label>
+                                <input type="text" id="propertyTitle" name="propertyTitle" placeholder="e.g., Spacious 2BHK with Garden View" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="propertyDescription">Property Description *</label>
+                            <textarea id="propertyDescription" name="propertyDescription" placeholder="Describe your property in detail..." required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Location & Area Details -->
+                    <div class="form-step" id="formStep2">
+                        <h2 style="text-align: center; margin-bottom: 30px; color: var(--deep-blue);">
+                            <i class="fas fa-map-marker-alt"></i> Location & Area Details
+                        </h2>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="city">City *</label>
+                                <select id="city" name="city" required>
+                                    <option value="">Select City</option>
+                                    <option value="mumbai">Mumbai</option>
+                                    <option value="delhi">Delhi</option>
+                                    <option value="bhavnagar">Bhavnagar</option>
+                                    <option value="ahmedabad">Ahmedabad</option>
+                                    <option value="surat">Surat</option>
+                                    <option value="bangalore">Bangalore</option>
+                                    <option value="pune">Pune</option>
+                                    <option value="hyderabad">Hyderabad</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="locality">Locality/Area *</label>
+                                <input type="text" id="locality" name="locality" placeholder="e.g., Andheri West, Koregaon Park" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="pincode">Pincode *</label>
+                                <input type="text" id="pincode" name="pincode" placeholder="6-digit pincode" maxlength="6" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="builtUpArea">Built-up Area (Sq Ft) *</label>
+                                <input type="number" id="builtUpArea" name="builtUpArea" placeholder="Area in square feet" min="100" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="carpetArea">Carpet Area (Sq Ft)</label>
+                                <input type="number" id="carpetArea" name="carpetArea" placeholder="Carpet area in square feet" min="50">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="floorNumber">Floor Number</label>
+                                <input type="text" id="floorNumber" name="floorNumber" placeholder="e.g., 3rd Floor, Ground Floor">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fullAddress">Complete Address *</label>
+                            <textarea id="fullAddress" name="fullAddress" placeholder="Enter complete address with landmarks..." required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Pricing & Features -->
+                    <div class="form-step" id="formStep3">
+                        <h2 style="text-align: center; margin-bottom: 30px; color: var(--deep-blue);">
+                            <i class="fas fa-rupee-sign"></i> Pricing & Features
+                        </h2>
+                        
+                        <div class="pricing-calculator">
+                            <h3><i class="fas fa-calculator"></i> AI Price Calculator</h3>
+                            <p>Our AI will suggest optimal pricing based on location, area, and market trends</p>
+                            <div class="ai-price-suggestion" id="aiPriceSuggestion">
+                                <strong>AI Suggested Price: ₹45,00,000 - ₹55,00,000</strong>
+                                <small>Based on similar properties in your area</small>
+                            </div>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="expectedPrice">Expected Price (₹) *</label>
+                                <input type="number" id="expectedPrice" name="expectedPrice" placeholder="Enter price in rupees" min="100000" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="priceNegotiable">Price Negotiable</label>
+                                <select id="priceNegotiable" name="priceNegotiable">
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="maintenanceCharges">Maintenance Charges (₹/month)</label>
+                                <input type="number" id="maintenanceCharges" name="maintenanceCharges" placeholder="Monthly maintenance">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="constructionYear">Year of Construction</label>
+                                <input type="number" id="constructionYear" name="constructionYear" placeholder="e.g., 2020" min="1980" max="2025">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Property Features & Amenities</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="parking" name="features" value="parking">
+                                    <label for="parking">Car Parking</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="lift" name="features" value="lift">
+                                    <label for="lift">Lift/Elevator</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="gym" name="features" value="gym">
+                                    <label for="gym">Gym/Fitness Center</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="swimming" name="features" value="swimming">
+                                    <label for="swimming">Swimming Pool</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="garden" name="features" value="garden">
+                                    <label for="garden">Garden/Park</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="security" name="features" value="security">
+                                    <label for="security">24x7 Security</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="powerbackup" name="features" value="powerbackup">
+                                    <label for="powerbackup">Power Backup</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="playground" name="features" value="playground">
+                                    <label for="playground">Children's Play Area</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Photos & Contact -->
+                    <div class="form-step" id="formStep4">
+                        <h2 style="text-align: center; margin-bottom: 30px; color: var(--deep-blue);">
+                            <i class="fas fa-camera"></i> Photos & Contact Information
+                        </h2>
+                        
+                        <div class="form-group">
+                            <label>Property Photos *</label>
+                            <div class="upload-zone" onclick="document.getElementById('propertyPhotos').click()">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <h3>Upload Property Photos</h3>
+                                <p>Click to select photos or drag and drop</p>
+                                <small>Supported formats: JPG, PNG, WEBP (Max 10 photos)</small>
+                            </div>
+                            <input type="file" id="propertyPhotos" name="propertyPhotos" multiple accept="image/*" style="display: none;">
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="ownerName">Owner Name *</label>
+                                <input type="text" id="ownerName" name="ownerName" placeholder="Property owner name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contactNumber">Contact Number *</label>
+                                <input type="tel" id="contactNumber" name="contactNumber" placeholder="10-digit mobile number" maxlength="10" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="alternateNumber">Alternate Number</label>
+                                <input type="tel" id="alternateNumber" name="alternateNumber" placeholder="Alternate contact" maxlength="10">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="emailAddress">Email Address *</label>
+                                <input type="email" id="emailAddress" name="emailAddress" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="checkbox-item" style="justify-content: center; margin-top: 20px;">
+                                <input type="checkbox" id="terms" name="terms" required>
+                                <label for="terms">I agree to the Terms & Conditions and Zero Brokerage Policy</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="form-navigation">
+                        <button type="button" class="btn-prev" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        <button type="button" class="btn-next" id="nextBtn" onclick="changeStep(1)">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button type="submit" class="btn-next" id="submitBtn" style="display: none;">
+                            <i class="fas fa-check"></i> Post Property
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Success Message -->
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle"></i>
+                    <h2>Property Posted Successfully!</h2>
+                    <p>Your property listing is now live with zero brokerage. You'll receive inquiries directly.</p>
+                    <button class="btn-primary" onclick="window.location.href='properties.html'">View All Properties</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modals -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>I am a:</label>
+                    <select id="loginUserType" required>
+                        <option value="customer">Customer</option>
+                        <option value="broker">Broker</option>
+                        <option value="builder">Builder</option>
+                        <option value="service_provider">Service Provider</option>
+                        <option value="shop_owner">Shop Owner</option>
+                    </select>
+                </div>
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Sign Up</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label>I am a:</label>
+                    <select id="signupUserType" required>
+                        <option value="customer">Customer</option>
+                        <option value="broker">Broker</option>
+                        <option value="builder">Builder</option>
+                        <option value="service_provider">Service Provider</option>
+                        <option value="shop_owner">Shop Owner</option>
+                    </select>
+                </div>
+                <input type="text" id="signupFullName" placeholder="Full Name" required>
+                <input type="email" id="signupEmail" placeholder="Email" required>
+                <input type="tel" id="signupPhone" placeholder="Phone Number" required>
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
+                <button type="submit" class="btn-primary">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="post-property.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

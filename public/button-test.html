@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Test - Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: linear-gradient(135deg, #F4C430 0%, #D2691E 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            position: relative;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Button Functionality Test</h1>
+        <p>This page tests if the modal functions are working correctly.</p>
+        
+        <div class="test-section">
+            <h2>Direct onclick Test</h2>
+            <button class="test-button" onclick="openModal('testModal1')">Test Modal 1 (onclick)</button>
+            <button class="test-button" onclick="openModal('testModal2')">Test Modal 2 (onclick)</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>JavaScript Event Listener Test</h2>
+            <button class="test-button" id="jsButton1">Test Modal 1 (JS)</button>
+            <button class="test-button" id="jsButton2">Test Modal 2 (JS)</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>Function Availability Test</h2>
+            <button class="test-button" onclick="testFunctions()">Test Function Availability</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>Debug Log</h2>
+            <div id="debugLog" class="log">Page loaded...\n</div>
+            <button class="test-button" onclick="clearLog()">Clear Log</button>
+        </div>
+    </div>
+
+    <!-- Test Modals -->
+    <div id="testModal1" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('testModal1')">&times;</span>
+            <h2>🎉 Test Modal 1</h2>
+            <p>This modal opened successfully using the openModal function!</p>
+            <button class="test-button" onclick="closeModal('testModal1')">Close Modal</button>
+        </div>
+    </div>
+
+    <div id="testModal2" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('testModal2')">&times;</span>
+            <h2>🚀 Test Modal 2</h2>
+            <p>This modal also opened successfully! The functions are working.</p>
+            <button class="test-button" onclick="closeModal('testModal2')">Close Modal</button>
+        </div>
+    </div>
+
+    <script>
+        // Log function
+        function log(message) {
+            const logEl = document.getElementById('debugLog');
+            const timestamp = new Date().toLocaleTimeString();
+            logEl.textContent += `[${timestamp}] ${message}\n`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('debugLog').textContent = 'Log cleared...\n';
+        }
+
+        // Test modal functions - same as main site
+        window.openModal = function(modalId) {
+            log(`Opening modal: ${modalId}`);
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                log(`✅ Modal opened successfully: ${modalId}`);
+            } else {
+                log(`❌ Modal not found: ${modalId}`);
+                alert('Modal not found: ' + modalId);
+            }
+        };
+
+        window.closeModal = function(modalId) {
+            log(`Closing modal: ${modalId}`);
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                log(`✅ Modal closed successfully: ${modalId}`);
+            }
+        };
+
+        function testFunctions() {
+            log('Testing function availability...');
+            log(`openModal type: ${typeof window.openModal}`);
+            log(`closeModal type: ${typeof window.closeModal}`);
+            
+            if (typeof window.openModal === 'function') {
+                log('✅ openModal function is available');
+            } else {
+                log('❌ openModal function is NOT available');
+            }
+            
+            if (typeof window.closeModal === 'function') {
+                log('✅ closeModal function is available');
+            } else {
+                log('❌ closeModal function is NOT available');
+            }
+            
+            alert('Check the debug log for function availability results.');
+        }
+
+        // Add event listeners for JS buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            log('DOM Content Loaded');
+            
+            const jsButton1 = document.getElementById('jsButton1');
+            const jsButton2 = document.getElementById('jsButton2');
+            
+            if (jsButton1) {
+                jsButton1.addEventListener('click', function() {
+                    log('JS Button 1 clicked');
+                    openModal('testModal1');
+                });
+                log('✅ JS Button 1 event listener added');
+            }
+            
+            if (jsButton2) {
+                jsButton2.addEventListener('click', function() {
+                    log('JS Button 2 clicked');
+                    openModal('testModal2');
+                });
+                log('✅ JS Button 2 event listener added');
+            }
+            
+            log('🚀 Test page fully initialized');
+        });
+    </script>
+</body>
+</html>

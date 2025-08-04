@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        .header {
+            background: #F4C430;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-logo h2 {
+            color: #333;
+            margin: 0;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-menu a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        
+        .nav-menu a:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-buttons button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .btn-secondary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }
+        
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 10px;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            margin: 3px 0;
+            transition: all 0.3s ease;
+            display: block;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(9px, 9px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(9px, -9px);
+        }
+        
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                padding: 1rem 0;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .nav-menu li {
+                padding: 0.5rem 2rem;
+            }
+            
+            .nav-buttons {
+                display: none;
+            }
+        }
+        
+        .content {
+            margin-top: 100px;
+            padding: 2rem;
+        }
+        
+        .section {
+            min-height: 500px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 10px;
+        }
+        
+        #home { background: #e3f2fd; }
+        #products { background: #f3e5f5; }
+        #services { background: #e8f5e8; }
+        #contact { background: #fff3e0; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h2>Test Navigation</h2>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <button class="btn-secondary" onclick="alert('Login clicked!')">Login</button>
+                    <button class="btn-primary" onclick="alert('Sign Up clicked!')">Sign Up</button>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="content">
+        <div id="home" class="section">
+            <h2>Home Section</h2>
+            <p>This is the home section content.</p>
+        </div>
+        
+        <div id="products" class="section">
+            <h2>Products Section</h2>
+            <p>This is the products section content.</p>
+        </div>
+        
+        <div id="services" class="section">
+            <h2>Services Section</h2>
+            <p>This is the services section content.</p>
+        </div>
+        
+        <div id="contact" class="section">
+            <h2>Contact Section</h2>
+            <p>This is the contact section content.</p>
+        </div>
+    </div>
+
+    <script>
+        console.log('Test script loaded');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded');
+            
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            console.log('Elements found:', {
+                hamburger: !!hamburger,
+                navMenu: !!navMenu
+            });
+            
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Hamburger clicked!');
+                    
+                    navMenu.classList.toggle('active');
+                    hamburger.classList.toggle('active');
+                    
+                    console.log('Menu active:', navMenu.classList.contains('active'));
+                });
+            }
+            
+            // Navigation link click handlers
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    console.log('Navigation link clicked:', this.textContent, this.href);
+                    
+                    // Close mobile menu if open
+                    navMenu.classList.remove('active');
+                    hamburger.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
