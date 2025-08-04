@@ -251,15 +251,15 @@ background: linear-gradient(135deg, var(--saffron) 0%, var(--golden) 100%);
 
 /* APPLE-STYLE WATERY FLOATING STATS WINDOW - SAFFRON THEME */
 .floating-stats-window {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 100, 255, 0.7);
     backdrop-filter: blur(20px) saturate(120%);
     -webkit-backdrop-filter: blur(20px) saturate(120%);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 24px;
     padding: 24px;
     box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.3),
-        0 8px 16px rgba(0, 0, 0, 0.2);
+        0 20px 40px rgba(0, 100, 255, 0.3),
+        0 8px 16px rgba(0, 100, 255, 0.2);
     display: grid;
     grid-template-columns: 1fr;
     gap: 8px;
