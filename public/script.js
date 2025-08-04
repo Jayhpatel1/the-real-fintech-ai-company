@@ -427,7 +427,83 @@ function showError(message) {
         hamburger.addEventListener('click', function() {
             navMenu.classList.toggle('active');
             hamburger.classList.toggle('active');
+            
+            // Add/remove mobile auth buttons
+            if (navMenu.classList.contains('active')) {
+                addMobileAuthButtons();
+            } else {
+                removeMobileAuthButtons();
+            }
         });
+    }
+    
+    // Function to add Login & Signup buttons to mobile menu
+    function addMobileAuthButtons() {
+        // Check if buttons already exist
+        if (document.querySelector('.mobile-auth-buttons')) {
+            return;
+        }
+        
+        const mobileAuthContainer = document.createElement('div');
+        mobileAuthContainer.className = 'mobile-auth-buttons';
+        mobileAuthContainer.style.cssText = `
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 1rem;
+        `;
+        
+        const loginBtn = document.createElement('button');
+        loginBtn.textContent = 'Login';
+        loginBtn.className = 'mobile-login-btn';
+        loginBtn.style.cssText = `
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--deep-blue) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        `;
+        loginBtn.onclick = function() {
+            openModal('loginModal');
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        };
+        
+        const signupBtn = document.createElement('button');
+        signupBtn.textContent = 'Sign Up';
+        signupBtn.className = 'mobile-signup-btn';
+        signupBtn.style.cssText = `
+            background: linear-gradient(135deg, var(--saffron-primary) 0%, var(--golden) 50%, var(--saffron-bright) 100%);
+            color: white;
+            border: 2px solid var(--saffron-primary);
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        `;
+        signupBtn.onclick = function() {
+            openModal('signupModal');
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        };
+        
+        mobileAuthContainer.appendChild(loginBtn);
+        mobileAuthContainer.appendChild(signupBtn);
+        navMenu.appendChild(mobileAuthContainer);
+    }
+    
+    // Function to remove mobile auth buttons
+    function removeMobileAuthButtons() {
+        const mobileAuthButtons = document.querySelector('.mobile-auth-buttons');
+        if (mobileAuthButtons) {
+            mobileAuthButtons.remove();
+        }
     }
 
     // Smooth scrolling for navigation links
