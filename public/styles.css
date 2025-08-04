@@ -327,23 +327,18 @@ background: linear-gradient(135deg, var(--saffron) 0%, var(--golden) 100%);
 @keyframes ultraFloatAnimation {
     0%, 100% {
         transform: translateY(0px) rotate(0deg) scale(1);
-        filter: hue-rotate(0deg);
     }
     20% {
         transform: translateY(-12px) rotate(1deg) scale(1.02);
-        filter: hue-rotate(10deg);
     }
     40% {
         transform: translateY(-6px) rotate(-0.5deg) scale(0.98);
-        filter: hue-rotate(20deg);
     }
     60% {
         transform: translateY(-18px) rotate(1.5deg) scale(1.01);
-        filter: hue-rotate(30deg);
     }
     80% {
         transform: translateY(-4px) rotate(-1deg) scale(0.99);
-        filter: hue-rotate(15deg);
     }
 }
 
@@ -405,15 +400,7 @@ background: linear-gradient(135deg, var(--saffron) 0%, var(--golden) 100%);
     font-size: 2rem;
     font-weight: 900;
     margin-bottom: 8px;
-    background: linear-gradient(135deg, 
-        #F4C430 0%, 
-        #F4C430 25%, 
-        #F4C430 50%, 
-        #F4C430 75%, 
-        #F4C430 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #F4C430;
     text-shadow: 2px 2px 4px rgba(244, 196, 48, 0.3);
     position: relative;
     z-index: 1;
