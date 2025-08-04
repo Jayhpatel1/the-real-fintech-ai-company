@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can read and write their own user document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow authenticated users to read properties and products
+    match /properties/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        (resource.data.userId == request.auth.uid || 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.userType in ['broker', 'builder', 'admin']);
+    }
+    
+    match /products/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        (resource.data.userId == request.auth.uid || 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.userType in ['shop_owner', 'admin']);
+    }
+    
+    match /services/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        (resource.data.userId == request.auth.uid || 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.userType in ['service_provider', 'admin']);
+    }
+    
+    // Allow authenticated users to post requirements and ads
+    match /requirements/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        (resource.data.userId == request.auth.uid || 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.userType in ['customer', 'admin']);
+    }
+    
+    match /property_ads/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid != null;
+    }
+    
+    // Allow all authenticated users to read initial data for the platform
+    match /initial_data/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.userType == 'admin';
+    }
+  }
+}
