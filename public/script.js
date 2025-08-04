@@ -522,52 +522,113 @@ function showError(message) {
 
     // Firebase Authentication State Listener
     firebase.auth().onAuthStateChanged((user) => {
+        console.log('🔥 Firebase Auth State Changed:', user ? `User logged in: ${user.email}` : 'User logged out');
+        
         if (user) {
             // User is signed in
             currentUser = user;
-            console.log('User is signed in:', user.email);
+            console.log('✅ User is signed in:', user.email);
+            
+            // IMMEDIATELY hide login/signup buttons and show loading state
+            const authButtons = document.getElementById('authButtons');
+            const navUserProfile = document.getElementById('navUserProfile');
+            
+            if (authButtons) {
+                authButtons.style.display = 'none';
+                console.log('✅ Hidden auth buttons');
+            }
+            
+            if (navUserProfile) {
+                navUserProfile.style.display = 'flex';
+                // Show loading state
+                document.getElementById('navUserName').textContent = 'Loading...';
+                document.getElementById('navUserType').textContent = 'Please wait';
+                console.log('✅ Showing user profile area');
+            }
             
             // Load user data from Firestore
             db.collection('users').doc(user.uid).get().then((doc) => {
                 if (doc.exists) {
                     const userData = doc.data();
-                    console.log('User data loaded:', userData);
+                    console.log('✅ User data loaded from Firestore:', userData);
+                    
+                    // Update UI with user data
                     showUserProfile(user, userData);
                     
-                    // Check if we should show dashboard (after login)
-                    const urlParams = new URLSearchParams(window.location.search);
-                    if (urlParams.get('showDashboard') === 'true') {
-                        // Remove the parameter and show dashboard
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                        setTimeout(() => {
-                            showDashboard(userData.userType);
-                        }, 500);
-                    }
+                    // Force UI update
+                    setTimeout(() => {
+                        console.log('🔄 Forcing UI refresh...');
+                        showUserProfile(user, userData);
+                    }, 100);
+                    
                 } else {
-                    console.error('No user data found in Firestore for user:', user.uid);
-                    alert('User profile not found. Please contact support.');
+                    console.error('❌ No user data found in Firestore for user:', user.uid);
+                    // Create basic user data if it doesn't exist
+                    const basicUserData = {
+                        uid: user.uid,
+                        email: user.email,
+                        fullName: user.displayName || 'User',
+                        userType: 'customer', // Default to customer
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+                    
+                    // Save basic data to Firestore
+                    db.collection('users').doc(user.uid).set(basicUserData).then(() => {
+                        console.log('✅ Created basic user profile');
+                        showUserProfile(user, basicUserData);
+                    }).catch((error) => {
+                        console.error('❌ Error creating user profile:', error);
+                        // Still show user with basic info
+                        showUserProfile(user, basicUserData);
+                    });
                 }
             }).catch((error) => {
-                console.error('Error getting user data:', error);
-                alert('Error loading user profile. Please try refreshing the page.');
+                console.error('❌ Error getting user data:', error);
+                // Show user with basic email info even if Firestore fails
+                const fallbackData = {
+                    fullName: user.displayName || user.email.split('@')[0],
+                    userType: 'customer',
+                    email: user.email
+                };
+                showUserProfile(user, fallbackData);
             });
         } else {
             // User is signed out
-            console.log('User is signed out');
+            console.log('❌ User is signed out');
             currentUser = null;
             currentUserData = null;
             
             // Reset UI to logged out state
-            document.getElementById('authButtons').style.display = 'flex';
-            document.getElementById('navUserProfile').style.display = 'none';
-            document.getElementById('userProfileHeader').style.display = 'none';
+            const authButtons = document.getElementById('authButtons');
+            const navUserProfile = document.getElementById('navUserProfile');
+            const userProfileHeader = document.getElementById('userProfileHeader');
+            
+            if (authButtons) {
+                authButtons.style.display = 'flex';
+                console.log('✅ Showing auth buttons');
+            }
+            
+            if (navUserProfile) {
+                navUserProfile.style.display = 'none';
+                console.log('✅ Hidden user profile');
+            }
+            
+            if (userProfileHeader) {
+                userProfileHeader.style.display = 'none';
+                console.log('✅ Hidden profile header');
+            }
             
             // Hide all dashboards and show home
             const dashboards = document.querySelectorAll('.user-dashboard');
             dashboards.forEach(dashboard => {
                 dashboard.style.display = 'none';
             });
-            document.getElementById('home').style.display = 'block';
+            
+            const homeSection = document.getElementById('home');
+            if (homeSection) {
+                homeSection.style.display = 'block';
+                console.log('✅ Showing home section');
+            }
         }
     });
     
@@ -799,36 +860,106 @@ function showError(message) {
     };
     
     function showUserProfile(user, userData) {
+        console.log('🚀 showUserProfile called with:', { user: user?.email, userData });
+        
         currentUser = user;
         currentUserData = userData;
         
-        // Validate user data
-        if (!userData || !userData.userType) {
-            console.error('Invalid user data:', userData);
-            alert('Invalid user profile data. Please contact support.');
-            return;
+        // Validate user data - provide fallback values
+        if (!userData) {
+            console.warn('⚠️ No userData provided, using fallback');
+            userData = {
+                fullName: user?.displayName || user?.email?.split('@')[0] || 'User',
+                userType: 'customer',
+                email: user?.email
+            };
         }
         
-        // Update navigation
-        document.getElementById('authButtons').style.display = 'none';
-        document.getElementById('navUserProfile').style.display = 'flex';
+        if (!userData.userType) {
+            console.warn('⚠️ No userType provided, defaulting to customer');
+            userData.userType = 'customer';
+        }
         
-        // Format user type display name
+        // FORCE IMMEDIATE UI UPDATE
+        console.log('🔄 Forcing immediate UI update...');
+        
+        // 1. IMMEDIATELY hide auth buttons
+        const authButtons = document.getElementById('authButtons');
+        if (authButtons) {
+            authButtons.style.display = 'none';
+            console.log('✅ Auth buttons hidden');
+        } else {
+            console.error('❌ authButtons element not found!');
+        }
+        
+        // 2. IMMEDIATELY show user profile
+        const navUserProfile = document.getElementById('navUserProfile');
+        if (navUserProfile) {
+            navUserProfile.style.display = 'flex';
+            console.log('✅ User profile shown');
+        } else {
+            console.error('❌ navUserProfile element not found!');
+        }
+        
+        // 3. Format user type display name
         const userTypeDisplay = formatUserTypeDisplay(userData.userType);
+        const displayName = userData.fullName || user?.displayName || user?.email?.split('@')[0] || 'User';
         
-        // Update user info in navigation
-        document.getElementById('navUserName').textContent = userData.fullName || 'User';
-        document.getElementById('navUserType').textContent = userTypeDisplay;
+        console.log('📝 Updating profile with:', { displayName, userTypeDisplay });
         
-        // Update profile header
-        document.getElementById('userName').textContent = userData.fullName || 'User';
-        document.getElementById('userType').textContent = userTypeDisplay;
-        document.getElementById('userEmail').textContent = user.email;
+        // 4. Update navigation user info
+        const navUserNameEl = document.getElementById('navUserName');
+        const navUserTypeEl = document.getElementById('navUserType');
         
-        // Show profile header
-        document.getElementById('userProfileHeader').style.display = 'block';
+        if (navUserNameEl) {
+            navUserNameEl.textContent = displayName;
+            console.log('✅ Nav user name updated:', displayName);
+        } else {
+            console.error('❌ navUserName element not found!');
+        }
         
-        console.log(`User profile loaded for ${userTypeDisplay}: ${userData.fullName}`);
+        if (navUserTypeEl) {
+            navUserTypeEl.textContent = userTypeDisplay;
+            console.log('✅ Nav user type updated:', userTypeDisplay);
+        } else {
+            console.error('❌ navUserType element not found!');
+        }
+        
+        // 5. Update profile header if it exists
+        const userNameEl = document.getElementById('userName');
+        const userTypeEl = document.getElementById('userType');
+        const userEmailEl = document.getElementById('userEmail');
+        const userProfileHeader = document.getElementById('userProfileHeader');
+        
+        if (userNameEl) {
+            userNameEl.textContent = displayName;
+            console.log('✅ Profile name updated');
+        }
+        
+        if (userTypeEl) {
+            userTypeEl.textContent = userTypeDisplay;
+            console.log('✅ Profile type updated');
+        }
+        
+        if (userEmailEl) {
+            userEmailEl.textContent = user?.email || 'No email';
+            console.log('✅ Profile email updated');
+        }
+        
+        if (userProfileHeader) {
+            userProfileHeader.style.display = 'block';
+            console.log('✅ Profile header shown');
+        }
+        
+        // 6. Force a reflow to ensure changes are applied
+        if (navUserProfile) {
+            navUserProfile.offsetHeight; // Force reflow
+        }
+        
+        console.log(`🎉 User profile fully loaded for ${userTypeDisplay}: ${displayName}`);
+        
+        // Update global reference
+        currentUserData = userData;
     }
     
     function showDashboard(userType) {
