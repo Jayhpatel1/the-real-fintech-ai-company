@@ -531,19 +531,43 @@ function showError(message) {
             db.collection('users').doc(user.uid).get().then((doc) => {
                 if (doc.exists) {
                     const userData = doc.data();
+                    console.log('User data loaded:', userData);
                     showUserProfile(user, userData);
-                    // Don't automatically show dashboard on page load
+                    
+                    // Check if we should show dashboard (after login)
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get('showDashboard') === 'true') {
+                        // Remove the parameter and show dashboard
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                        setTimeout(() => {
+                            showDashboard(userData.userType);
+                        }, 500);
+                    }
                 } else {
-                    console.error('No user data found in Firestore');
+                    console.error('No user data found in Firestore for user:', user.uid);
+                    alert('User profile not found. Please contact support.');
                 }
             }).catch((error) => {
                 console.error('Error getting user data:', error);
+                alert('Error loading user profile. Please try refreshing the page.');
             });
         } else {
             // User is signed out
             console.log('User is signed out');
             currentUser = null;
             currentUserData = null;
+            
+            // Reset UI to logged out state
+            document.getElementById('authButtons').style.display = 'flex';
+            document.getElementById('navUserProfile').style.display = 'none';
+            document.getElementById('userProfileHeader').style.display = 'none';
+            
+            // Hide all dashboards and show home
+            const dashboards = document.querySelectorAll('.user-dashboard');
+            dashboards.forEach(dashboard => {
+                dashboard.style.display = 'none';
+            });
+            document.getElementById('home').style.display = 'block';
         }
     });
     
@@ -826,19 +850,23 @@ function showError(message) {
         }
     }
     
-    function redirectAfterAuth(userType) {
-        // Load user data from firestore
+    function redirectAfterAuth() {
+        // Load user data from firestore and use the stored userType
         if (currentUser) {
             db.collection('users').doc(currentUser.uid).get().then((doc) => {
                 if (doc.exists) {
                     const userData = doc.data();
+                    console.log('Redirecting with user data:', userData);
                     showUserProfile(currentUser, userData);
-                    showDashboard(userType);
+                    // Use the userType stored in Firestore, not from the form
+                    showDashboard(userData.userType);
                 } else {
-                    console.error('No user data found');
+                    console.error('No user data found in Firestore');
+                    alert('User profile not found. Please contact support.');
                 }
             }).catch((error) => {
                 console.error('Error getting user data:', error);
+                alert('Error loading user profile. Please try refreshing the page.');
             });
         }
     }
@@ -873,7 +901,7 @@ function showError(message) {
                     showAuthSuccess('Welcome back! Redirecting to your dashboard...');
                     setTimeout(() => {
                         closeModal('loginModal');
-                        redirectAfterAuth(userType);
+                        redirectAfterAuth();
                     }, 1500);
                 })
                 .catch((error) => {
@@ -976,7 +1004,7 @@ function showError(message) {
                     setTimeout(() => {
                         closeModal('signupModal');
                         // Redirect based on user type
-                        redirectAfterAuth(userType);
+                        redirectAfterAuth();
                     }, 2000);
                 })
                 .catch((error) => {
