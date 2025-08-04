@@ -520,6 +520,33 @@ function showError(message) {
         });
     });
 
+    // Firebase Authentication State Listener
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            // User is signed in
+            currentUser = user;
+            console.log('User is signed in:', user.email);
+            
+            // Load user data from Firestore
+            db.collection('users').doc(user.uid).get().then((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    showUserProfile(user, userData);
+                    // Don't automatically show dashboard on page load
+                } else {
+                    console.error('No user data found in Firestore');
+                }
+            }).catch((error) => {
+                console.error('Error getting user data:', error);
+            });
+        } else {
+            // User is signed out
+            console.log('User is signed out');
+            currentUser = null;
+            currentUserData = null;
+        }
+    });
+    
     // Firebase Authentication Handling
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
@@ -603,16 +630,217 @@ function showError(message) {
         }
     }
     
-    function redirectAfterAuth(userType) {
-        // Show dashboard based on user type
-        const dashboard = document.getElementById('ai-dashboard');
-        if (dashboard) {
-            dashboard.style.display = 'block';
-            dashboard.scrollIntoView({ behavior: 'smooth' });
+    // Global variables for current user
+    let currentUser = null;
+    let currentUserData = null;
+    
+    // Dashboard action functions
+    window.searchProperties = function(type) {
+        alert(`Searching for properties to ${type}. Feature coming soon!`);
+    };
+    
+    window.openAdvancedSearch = function() {
+        alert('Advanced search feature coming soon!');
+    };
+    
+    window.postRequirement = function() {
+        alert('Post requirement feature coming soon!');
+    };
+    
+    window.addProperty = function(type) {
+        alert(`Add property for ${type} feature coming soon!`);
+    };
+    
+    window.importProperties = function() {
+        alert('Bulk import feature coming soon!');
+    };
+    
+    window.viewAllListings = function() {
+        alert('View all listings feature coming soon!');
+    };
+    
+    window.launchProject = function(type) {
+        alert(`Launch ${type} project feature coming soon!`);
+    };
+    
+    window.uploadFloorPlans = function() {
+        alert('Upload floor plans feature coming soon!');
+    };
+    
+    window.viewAllProjects = function() {
+        alert('View all projects feature coming soon!');
+    };
+    
+    window.viewSalesReport = function() {
+        alert('Sales report feature coming soon!');
+    };
+    
+    window.addProduct = function(category) {
+        alert(`Add ${category} products feature coming soon!`);
+    };
+    
+    window.bulkUploadProducts = function() {
+        alert('Bulk upload products feature coming soon!');
+    };
+    
+    window.manageInventory = function() {
+        alert('Manage inventory feature coming soon!');
+    };
+    
+    window.addService = function(type) {
+        alert(`Add ${type} service feature coming soon!`);
+    };
+    
+    window.setServiceArea = function() {
+        alert('Set service area feature coming soon!');
+    };
+    
+    window.manageServices = function() {
+        alert('Manage services feature coming soon!');
+    };
+    
+    window.viewCalendar = function() {
+        alert('Calendar view feature coming soon!');
+    };
+    
+    // User profile functions
+    window.editProfile = function() {
+        alert('Edit profile feature coming soon!');
+    };
+    
+    window.viewSettings = function() {
+        alert('Settings feature coming soon!');
+    };
+    
+    window.toggleUserDropdown = function() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    };
+    
+    window.goToDashboard = function() {
+        if (currentUserData) {
+            showDashboard(currentUserData.userType);
+        }
+        // Close dropdown
+        document.getElementById('userDropdown').style.display = 'none';
+    };
+    
+    window.logoutUser = function() {
+        firebase.auth().signOut().then(() => {
+            // Hide user profile and dashboards
+            document.getElementById('navUserProfile').style.display = 'none';
+            document.getElementById('userProfileHeader').style.display = 'none';
+            document.getElementById('authButtons').style.display = 'flex';
+            
+            // Hide all dashboards
+            const dashboards = document.querySelectorAll('.user-dashboard');
+            dashboards.forEach(dashboard => {
+                dashboard.style.display = 'none';
+            });
+            
+            // Show hero section
+            document.getElementById('home').style.display = 'block';
+            
+            // Reset global variables
+            currentUser = null;
+            currentUserData = null;
+            
+            alert('Logged out successfully!');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }).catch((error) => {
+            console.error('Logout error:', error);
+            alert('Error logging out. Please try again.');
+        });
+    };
+    
+    function showUserProfile(user, userData) {
+        currentUser = user;
+        currentUserData = userData;
+        
+        // Update navigation
+        document.getElementById('authButtons').style.display = 'none';
+        document.getElementById('navUserProfile').style.display = 'flex';
+        
+        // Update user info in navigation
+        document.getElementById('navUserName').textContent = userData.fullName || 'User';
+        document.getElementById('navUserType').textContent = userData.userType.charAt(0).toUpperCase() + userData.userType.slice(1);
+        
+        // Update profile header
+        document.getElementById('userName').textContent = userData.fullName || 'User';
+        document.getElementById('userType').textContent = userData.userType.charAt(0).toUpperCase() + userData.userType.slice(1);
+        document.getElementById('userEmail').textContent = user.email;
+        
+        // Show profile header
+        document.getElementById('userProfileHeader').style.display = 'block';
+    }
+    
+    function showDashboard(userType) {
+        // Hide hero section and all dashboards first
+        document.getElementById('home').style.display = 'none';
+        const dashboards = document.querySelectorAll('.user-dashboard');
+        dashboards.forEach(dashboard => {
+            dashboard.style.display = 'none';
+        });
+        
+        // Show specific dashboard
+        const targetDashboard = document.getElementById(`${userType}-dashboard`);
+        if (targetDashboard) {
+            targetDashboard.style.display = 'block';
+            targetDashboard.scrollIntoView({ behavior: 'smooth' });
         }
         
-        // Future: Add specific redirects for different user types
-        console.log('Redirecting user type:', userType);
+        // Load user-specific data (simulate for now)
+        loadUserData(userType);
+    }
+    
+    function loadUserData(userType) {
+        // Simulate loading user-specific data
+        switch(userType) {
+            case 'customer':
+                document.getElementById('customerSavedProperties').textContent = '3';
+                document.getElementById('customerActiveRequests').textContent = '1';
+                document.getElementById('customerViewedProperties').textContent = '15';
+                break;
+            case 'broker':
+                document.getElementById('brokerActiveListings').textContent = '12';
+                document.getElementById('brokerLeads').textContent = '8';
+                document.getElementById('brokerCommission').textContent = '₹45,000';
+                break;
+            case 'builder':
+                document.getElementById('builderActiveProjects').textContent = '2';
+                document.getElementById('builderUnitsAvailable').textContent = '24';
+                document.getElementById('builderUnitsSold').textContent = '6';
+                break;
+            case 'shop_owner':
+                document.getElementById('shopProducts').textContent = '18';
+                document.getElementById('shopOrders').textContent = '5';
+                document.getElementById('shopRevenue').textContent = '₹28,500';
+                break;
+            case 'service_provider':
+                document.getElementById('servicesOffered').textContent = '4';
+                document.getElementById('activeBookings').textContent = '7';
+                document.getElementById('serviceRevenue').textContent = '₹32,000';
+                break;
+        }
+    }
+    
+    function redirectAfterAuth(userType) {
+        // Load user data from firestore
+        if (currentUser) {
+            db.collection('users').doc(currentUser.uid).get().then((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    showUserProfile(currentUser, userData);
+                    showDashboard(userType);
+                } else {
+                    console.error('No user data found');
+                }
+            }).catch((error) => {
+                console.error('Error getting user data:', error);
+            });
+        }
     }
     
     if (loginForm) {
