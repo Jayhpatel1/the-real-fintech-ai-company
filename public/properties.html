@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Properties - The Real Fintech AI Company</title>
+    <meta name="description" content="Explore all property types - Apartments, Villas, Farm Houses, Bungalows, Commercial properties at zero brokerage.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css?v=2025080320">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <div class="logo-container">
+                        <div class="logo-square"></div>
+                        <h2>The Real Fintech AI</h2>
+                    </div>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="properties.html" class="active">Properties</a></li>
+                    <li><a href="index.html#products">Products</a></li>
+                    <li><a href="index.html#services">Services</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <button class="btn-secondary" onclick="openModal('loginModal')">Login</button>
+                    <button class="btn-primary" onclick="openModal('signupModal')">Sign Up</button>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Properties Hero Section -->
+    <section class="properties-hero">
+        <div class="container">
+            <h1 class="section-title">🏠 Property Types</h1>
+            <p class="section-subtitle">Discover your perfect property with our AI-powered platform - Zero Brokerage Guaranteed!</p>
+        </div>
+    </section>
+    
+    <!-- Properties Grid Section -->
+    <section id="properties" class="properties-section">
+        <div class="container">
+            <div class="properties-grid">
+                <div class="property-type-card">
+                    <div class="property-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>🏢 Apartments</h3>
+                    <p>Modern apartments with premium amenities in prime locations</p>
+                    <ul>
+                        <li>1-4 BHK Options</li>
+                        <li>Premium Amenities</li>
+                        <li>Gated Communities</li>
+                        <li>24/7 Security</li>
+                        <li>Parking Facilities</li>
+                    </ul>
+                    <div class="property-stats">
+                        <span class="stat">₹25L-₹2Cr</span>
+                        <span class="stat">500+ Available</span>
+                    </div>
+                    <button class="btn-primary property-btn">🔍 Browse Apartments</button>
+                </div>
+                
+                <div class="property-type-card">
+                    <div class="property-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3>🏠 Flats</h3>
+                    <p>Spacious flats for comfortable family living</p>
+                    <ul>
+                        <li>2-3 BHK Configurations</li>
+                        <li>Family-Friendly</li>
+                        <li>Good Ventilation</li>
+                        <li>Near Schools & Markets</li>
+                        <li>Public Transport Access</li>
+                    </ul>
+                    <div class="property-stats">
+                        <span class="stat">₹20L-₹1.5Cr</span>
+                        <span class="stat">800+ Available</span>
+                    </div>
+                    <button class="btn-primary property-btn">🔍 Browse Flats</button>
+                </div>
+                
+                <div class="property-type-card">
+                    <div class="property-icon">
+                        <i class="fas fa-chess-rook"></i>
+                    </div>
+                    <h3>🏰 Villas</h3>
+                    <p>Luxurious villas with private gardens and exclusive features</p>
+                    <ul>
+                        <li>3-6 BHK Premium Villas</li>
+                        <li>Private Gardens</li>
+                        <li>Swimming Pool</li>
+                        <li>Exclusive Clubhouse</li>
+                        <li>Premium Location</li>
+                    </ul>
+                    <div class="property-stats">
+                        <span class="stat">₹1Cr-₹10Cr</span>
+                        <span class="stat">150+ Available</span>
+                    </div>
+                    <button class="btn-primary property-btn">🔍 Browse Villas</button>
+                </div>
+                
+                <div class="property-type-card">
+                    <div class="property-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3>🌾 Farm Houses</h3>
+                    <p>Peaceful farm houses with agricultural land and natural surroundings</p>
+                    <ul>
+                        <li>Agricultural Land Included</li>
+                        <li>Natural Environment</li>
+                        <li>Organic Farming Ready</li>
+                        <li>Water Source Available</li>
+                        <li>Weekend Getaway Perfect</li>
+                    </ul>
+                    <div class="property-stats">
+                        <span class="stat">₹50L-₹5Cr</span>
+                        <span class="stat">75+ Available</span>
+                    </div>
+                    <button class="btn-primary property-btn">🔍 Browse Farm Houses</button>
+                </div>
+                
+                <div class="property-type-card">
+                    <div class="property-icon">
+                        <i class="fas fa-house-user"></i>
+                    </div>
+                    <h3>🏘️ Bungalows</h3>
+                    <p>Spacious bungalows with independent living and premium comfort</p>
+                    <ul>
+                        <li>Independent Living</li>
+                        <li>Large Compound Area</li>
+                        <li>Multiple Parking</li>
+                        <li>Customizable Interiors</li>
+                        <li>Privacy & Space</li>
+                    </ul>
+                    <div class="property-stats">
+                        <span class="stat">₹75L-₹8Cr</span>
+                        <span class="stat">200+ Available</span>
+                    </div>
+                    <button class="btn-primary property-btn">🔍 Browse Bungalows</button>
+                </div>
+                
+                <div class="property-type-card">
+                    <div class="property-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h3>🏪 Commercial</h3>
+                    <p>Prime commercial properties for business and investment opportunities</p>
+                    <ul>
+                        <li>Office Spaces</li>
+                        <li>Retail Shops</li>
+                        <li>Warehouses</li>
+                        <li>Co-working Spaces</li>
+                        <li>High ROI Potential</li>
+                    </ul>
+                    <div class="property-stats">
+                        <span class="stat">₹30L-₹20Cr</span>
+                        <span class="stat">300+ Available</span>
+                    </div>
+                    <button class="btn-primary property-btn">🔍 Browse Commercial</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- AI Features Section -->
+    <section class="ai-features-properties">
+        <div class="container">
+            <h2 class="section-title">🚀 AI-Powered Property Search</h2>
+            <div class="ai-features-grid">
+                <div class="ai-feature-card">
+                    <i class="fas fa-brain"></i>
+                    <h3>🧠 Neural Property Matching</h3>
+                    <p>Our AI analyzes your preferences and matches you with perfect properties</p>
+                </div>
+                <div class="ai-feature-card">
+                    <i class="fas fa-eye"></i>
+                    <h3>👁️ Computer Vision Analysis</h3>
+                    <p>Advanced image recognition to evaluate property conditions automatically</p>
+                </div>
+                <div class="ai-feature-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>📈 Predictive Pricing</h3>
+                    <p>AI-powered market analysis for accurate property valuations</p>
+                </div>
+                <div class="ai-feature-card">
+                    <i class="fab fa-ethereum"></i>
+                    <h3>⛓️ Blockchain Verification</h3>
+                    <p>Secure property ownership verification using blockchain technology</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact CTA -->
+    <section class="property-cta">
+        <div class="container">
+            <h2>Ready to Find Your Dream Property?</h2>
+            <p>Contact us today for zero brokerage deals and premium property solutions</p>
+            <div class="cta-buttons">
+                <a href="index.html#contact" class="btn-primary">Contact Us Now</a>
+                <button class="btn-secondary" onclick="openModal('signupModal')">Start Property Search</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>The Real Fintech AI</h3>
+                    <p>Revolutionizing real estate with AI technology. Zero brokerage, premium deals, and comprehensive solutions.</p>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-envelope"></i> jay@therealfintech.com</p>
+                        <p><i class="fas fa-phone"></i> +91 977-308-1099</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Ramnagar, Bhavnagar-364001, India 24/7</p>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Property Types</h4>
+                    <ul>
+                        <li>Apartments</li>
+                        <li>Flats</li>
+                        <li>Villas</li>
+                        <li>Farm Houses</li>
+                        <li>Bungalows</li>
+                        <li>Commercial Properties</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="properties.html">Properties</a></li>
+                        <li><a href="index.html#products">Products</a></li>
+                        <li><a href="index.html#services">Services</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>🚀 Revolutionary Features</h4>
+                    <div class="crypto-payment">
+                        <i class="fas fa-coins"></i>
+                        <div>
+                            <h5>🐕 Dogecoin Payments Accepted Soon!</h5>
+                            <p>Revolutionary crypto payments for property purchases</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 The Real Fintech AI Company. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Modals -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>I am a:</label>
+                    <select id="loginUserType" required>
+                        <option value="customer">Customer</option>
+                        <option value="broker">Broker</option>
+                        <option value="builder">Builder</option>
+                        <option value="service_provider">Service Provider</option>
+                        <option value="shop_owner">Shop Owner</option>
+                    </select>
+                </div>
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Sign Up</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label>I am a:</label>
+                    <select id="signupUserType" required>
+                        <option value="customer">Customer</option>
+                        <option value="broker">Broker</option>
+                        <option value="builder">Builder</option>
+                        <option value="service_provider">Service Provider</option>
+                        <option value="shop_owner">Shop Owner</option>
+                    </select>
+                </div>
+                <input type="text" id="signupFullName" placeholder="Full Name" required>
+                <input type="email" id="signupEmail" placeholder="Email" required>
+                <input type="tel" id="signupPhone" placeholder="Phone Number" required>
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
+                <button type="submit" class="btn-primary">Sign Up</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

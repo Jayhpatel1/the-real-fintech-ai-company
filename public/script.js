@@ -1,7 +1,7 @@
 // JavaScript for The Real Fintech AI Company Website
 
 document.addEventListener('DOMContentLoaded', function () {
-    const voiceSearchBtn = document.getElementById('voiceSearchBtn');
+    const voiceSearchBtn = document.getElementById('topVoiceSearchBtn');
     const voiceResultModal = document.getElementById('voiceResultModal');
     const voiceSearchResults = document.getElementById('voiceSearchResults');
     const loginModal = document.getElementById('loginModal');
@@ -91,21 +91,27 @@ function speakWelcomeMessage() {
         };
     }
 
-    // Handle voice search button click
-    voiceSearchBtn.addEventListener('click', function () {
+    // Voice search function to be used by both buttons
+    function handleVoiceSearch(buttonElement) {
         if (isFirstTouch) {
             isFirstTouch = false;
-        voiceSearchBtn.innerHTML = '\u003ci class="fas fa-microphone"\u003e\u003c/i\u003e\u003cspan\u003eListening...\u003c/span\u003e';
-
+            buttonElement.innerHTML = '\u003ci class="fas fa-microphone"\u003e\u003c/i\u003e\u003cspan\u003eListening...\u003c/span\u003e';
             speakWelcomeMessage();
         } else {
             if (recognition) {
-                startVoiceRecognition();
+                startVoiceRecognition(buttonElement);
             } else {
-                simulateVoiceRecognition();
+                simulateVoiceRecognition(buttonElement);
             }
         }
-    });
+    }
+
+    // Handle voice search button click
+    if (voiceSearchBtn) {
+        voiceSearchBtn.addEventListener('click', function () {
+            handleVoiceSearch(voiceSearchBtn);
+        });
+    }
 
     // Advanced AI features setup
     
@@ -211,8 +217,8 @@ function speakWelcomeMessage() {
         return response;
     }
 
-    function startVoiceRecognition() {
-        voiceSearchBtn.innerHTML = '<i class="fas fa-microphone"></i><span>Listening...</span>';
+    function startVoiceRecognition(buttonElement = voiceSearchBtn) {
+        buttonElement.innerHTML = '<i class="fas fa-microphone"></i><span>Listening...</span>';
         
         recognition.start();
         
@@ -223,14 +229,14 @@ function speakWelcomeMessage() {
         
         recognition.onerror = function(event) {
             console.error('Speech recognition error:', event.error);
-            voiceSearchBtn.classList.remove('listening');
-            voiceSearchBtn.innerHTML = '<i class="fas fa-microphone"></i><span>AI Voice Search</span>';
+            buttonElement.classList.remove('listening');
+            buttonElement.innerHTML = '<i class="fas fa-microphone"></i><span>AI Voice Search</span>';
             showError('Sorry, I could not hear you clearly. Please try again.');
         };
         
         recognition.onend = function() {
-            voiceSearchBtn.classList.remove('listening');
-            voiceSearchBtn.innerHTML = '<i class="fas fa-microphone"></i><span>AI Voice Search</span>';
+            buttonElement.classList.remove('listening');
+            buttonElement.innerHTML = '<i class="fas fa-microphone"></i><span>AI Voice Search</span>';
         };
     }
 
@@ -356,13 +362,13 @@ function speakWelcomeMessage() {
     }
 
     // Simulate voice recognition for browsers without support
-    function simulateVoiceRecognition() {
-        voiceSearchBtn.classList.add('listening');
-        voiceSearchBtn.innerHTML = '<i class="fas fa-microphone"></i><span>Listening...</span>';
+    function simulateVoiceRecognition(buttonElement = voiceSearchBtn) {
+        buttonElement.classList.add('listening');
+        buttonElement.innerHTML = '<i class="fas fa-microphone"></i><span>Listening...</span>';
         
         setTimeout(() => {
-            voiceSearchBtn.classList.remove('listening');
-            voiceSearchBtn.innerHTML = '<i class="fas fa-microphone"></i><span>AI Voice Search</span>';
+            buttonElement.classList.remove('listening');
+            buttonElement.innerHTML = '<i class="fas fa-microphone"></i><span>AI Voice Search</span>';
             
             // Simulate a sample query
             const sampleQueries = [
