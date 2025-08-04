@@ -20,15 +20,15 @@
     --premium-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     --floating-shadow: 0 20px 60px rgba(244, 164, 96, 0.15);
 
-    /* Floating window color cycle variables */
+    /* Floating window color cycle variables - Saffron Gold Theme */
     --primary-orange: #F4C430;      /* Saffron */
     --secondary-orange: #D2691E;    /* Deep Saffron */
-    --floating-red: #FF4500;        /* Orange Red */
-    --floating-blue: #1E90FF;       /* Dodger Blue */
-    --floating-saffron: #F4C430;    /* Saffron */
-    --floating-yellow: #FFD700;     /* Gold */
-    --floating-black: #000000;      /* Black */
-    --floating-golden: #DAA520;     /* Goldenrod */
+    --saffron-gold-1: #F4C430;      /* Classic Saffron Gold */
+    --saffron-gold-2: #DAA520;      /* Rich Goldenrod */
+    --saffron-gold-3: #FF8C00;      /* Deep Saffron Orange */
+    --saffron-gold-4: #B8860B;      /* Dark Goldenrod */
+    --saffron-gold-5: #FFD700;      /* Pure Gold */
+    --saffron-gold-6: #FFA500;      /* Orange Gold */
 }
 
 body {
@@ -82,7 +82,7 @@ body {
 }
 
 .nav-menu a {
-    color: #2F4F4F;
+    color: var(--saffron-primary);
     font-weight: 700;
     text-decoration: none;
     position: relative;
@@ -98,12 +98,12 @@ body {
     left: 0;
     width: 0;
     height: 2px;
-    background: #DAA520;
+    background: var(--golden);
     transition: width 0.3s ease;
 }
 
 .nav-menu a:hover {
-    color: #DAA520;
+    color: var(--golden);
     transform: translateY(-1px);
 }
 
@@ -269,10 +269,10 @@ background: linear-gradient(135deg, var(--saffron) 0%, var(--golden) 100%);
     left: -2px;
     right: -2px;
     bottom: -2px;
-    background: linear-gradient(45deg, var(--floating-red) 0%, var(--floating-blue) 20%, var(--floating-saffron) 40%, var(--floating-yellow) 60%, var(--floating-black) 80%, var(--floating-golden) 100%);
+    background: linear-gradient(45deg, var(--saffron-gold-1) 0%, var(--saffron-gold-2) 16.66%, var(--saffron-gold-3) 33.33%, var(--saffron-gold-4) 50%, var(--saffron-gold-5) 66.66%, var(--saffron-gold-6) 83.33%, var(--saffron-gold-1) 100%);
     border-radius: 22px;
     z-index: -1;
-    animation: gradientShift 4s ease-in-out infinite;
+    animation: saffronGoldGradientShift 7s ease-in-out infinite;
 }
 
 @keyframes floatAnimation {
@@ -290,27 +290,27 @@ background: linear-gradient(135deg, var(--saffron) 0%, var(--golden) 100%);
     }
 }
 
-@keyframes gradientShift {
+@keyframes saffronGoldGradientShift {
     0% {
-        background: linear-gradient(45deg, var(--floating-red) 0%, var(--floating-blue) 20%, var(--floating-saffron) 40%, var(--floating-yellow) 60%, var(--floating-black) 80%, var(--floating-golden) 100%);
+        background: linear-gradient(45deg, var(--saffron-gold-1) 0%, var(--saffron-gold-2) 16.66%, var(--saffron-gold-3) 33.33%, var(--saffron-gold-4) 50%, var(--saffron-gold-5) 66.66%, var(--saffron-gold-6) 83.33%, var(--saffron-gold-1) 100%);
     }
     16.66% {
-        background: linear-gradient(45deg, var(--floating-blue) 0%, var(--floating-saffron) 20%, var(--floating-yellow) 40%, var(--floating-black) 60%, var(--floating-golden) 80%, var(--floating-red) 100%);
+        background: linear-gradient(45deg, var(--saffron-gold-2) 0%, var(--saffron-gold-3) 16.66%, var(--saffron-gold-4) 33.33%, var(--saffron-gold-5) 50%, var(--saffron-gold-6) 66.66%, var(--saffron-gold-1) 83.33%, var(--saffron-gold-2) 100%);
     }
     33.33% {
-        background: linear-gradient(45deg, var(--floating-saffron) 0%, var(--floating-yellow) 20%, var(--floating-black) 40%, var(--floating-golden) 60%, var(--floating-red) 80%, var(--floating-blue) 100%);
+        background: linear-gradient(45deg, var(--saffron-gold-3) 0%, var(--saffron-gold-4) 16.66%, var(--saffron-gold-5) 33.33%, var(--saffron-gold-6) 50%, var(--saffron-gold-1) 66.66%, var(--saffron-gold-2) 83.33%, var(--saffron-gold-3) 100%);
     }
     50% {
-        background: linear-gradient(45deg, var(--floating-yellow) 0%, var(--floating-black) 20%, var(--floating-golden) 40%, var(--floating-red) 60%, var(--floating-blue) 80%, var(--floating-saffron) 100%);
+        background: linear-gradient(45deg, var(--saffron-gold-4) 0%, var(--saffron-gold-5) 16.66%, var(--saffron-gold-6) 33.33%, var(--saffron-gold-1) 50%, var(--saffron-gold-2) 66.66%, var(--saffron-gold-3) 83.33%, var(--saffron-gold-4) 100%);
     }
     66.66% {
-        background: linear-gradient(45deg, var(--floating-black) 0%, var(--floating-golden) 20%, var(--floating-red) 40%, var(--floating-blue) 60%, var(--floating-saffron) 80%, var(--floating-yellow) 100%);
+        background: linear-gradient(45deg, var(--saffron-gold-5) 0%, var(--saffron-gold-6) 16.66%, var(--saffron-gold-1) 33.33%, var(--saffron-gold-2) 50%, var(--saffron-gold-3) 66.66%, var(--saffron-gold-4) 83.33%, var(--saffron-gold-5) 100%);
     }
     83.33% {
-        background: linear-gradient(45deg, var(--floating-golden) 0%, var(--floating-red) 20%, var(--floating-blue) 40%, var(--floating-saffron) 60%, var(--floating-yellow) 80%, var(--floating-black) 100%);
+        background: linear-gradient(45deg, var(--saffron-gold-6) 0%, var(--saffron-gold-1) 16.66%, var(--saffron-gold-2) 33.33%, var(--saffron-gold-3) 50%, var(--saffron-gold-4) 66.66%, var(--saffron-gold-5) 83.33%, var(--saffron-gold-6) 100%);
     }
     100% {
-        background: linear-gradient(45deg, var(--floating-red) 0%, var(--floating-blue) 20%, var(--floating-saffron) 40%, var(--floating-yellow) 60%, var(--floating-black) 80%, var(--floating-golden) 100%);
+        background: linear-gradient(45deg, var(--saffron-gold-1) 0%, var(--saffron-gold-2) 16.66%, var(--saffron-gold-3) 33.33%, var(--saffron-gold-4) 50%, var(--saffron-gold-5) 66.66%, var(--saffron-gold-6) 83.33%, var(--saffron-gold-1) 100%);
     }
 }
 
@@ -618,13 +618,31 @@ border: 2px solid var(--bright-yellow);
 
 .nav-menu a {
     text-decoration: none;
-    color: #2F4F4F;
+    color: var(--saffron-primary);
     font-weight: 700;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    position: relative;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.3);
+}
+
+.nav-menu a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--golden);
+    transition: width 0.3s ease;
 }
 
 .nav-menu a:hover {
-    color: #DAA520;
+    color: var(--golden);
+    transform: translateY(-1px);
+}
+
+.nav-menu a:hover::after {
+    width: 100%;
 }
 
 .nav-buttons {
