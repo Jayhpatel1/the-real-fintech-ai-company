@@ -658,6 +658,25 @@ function showError(message) {
     let currentUser = null;
     let currentUserData = null;
     
+    // Supported user types and their display names
+    const USER_TYPES = {
+        'customer': 'Customer',
+        'broker': 'Broker', 
+        'builder': 'Builder',
+        'shop_owner': 'Shop Owner',
+        'service_provider': 'Service Provider'
+    };
+    
+    // Helper function to format user type display names
+    function formatUserTypeDisplay(userType) {
+        return USER_TYPES[userType] || userType.charAt(0).toUpperCase() + userType.slice(1);
+    }
+    
+    // Helper function to validate user type
+    function isValidUserType(userType) {
+        return Object.keys(USER_TYPES).includes(userType);
+    }
+    
     // Dashboard action functions
     window.searchProperties = function(type) {
         alert(`Searching for properties to ${type}. Feature coming soon!`);
@@ -783,24 +802,45 @@ function showError(message) {
         currentUser = user;
         currentUserData = userData;
         
+        // Validate user data
+        if (!userData || !userData.userType) {
+            console.error('Invalid user data:', userData);
+            alert('Invalid user profile data. Please contact support.');
+            return;
+        }
+        
         // Update navigation
         document.getElementById('authButtons').style.display = 'none';
         document.getElementById('navUserProfile').style.display = 'flex';
         
+        // Format user type display name
+        const userTypeDisplay = formatUserTypeDisplay(userData.userType);
+        
         // Update user info in navigation
         document.getElementById('navUserName').textContent = userData.fullName || 'User';
-        document.getElementById('navUserType').textContent = userData.userType.charAt(0).toUpperCase() + userData.userType.slice(1);
+        document.getElementById('navUserType').textContent = userTypeDisplay;
         
         // Update profile header
         document.getElementById('userName').textContent = userData.fullName || 'User';
-        document.getElementById('userType').textContent = userData.userType.charAt(0).toUpperCase() + userData.userType.slice(1);
+        document.getElementById('userType').textContent = userTypeDisplay;
         document.getElementById('userEmail').textContent = user.email;
         
         // Show profile header
         document.getElementById('userProfileHeader').style.display = 'block';
+        
+        console.log(`User profile loaded for ${userTypeDisplay}: ${userData.fullName}`);
     }
     
     function showDashboard(userType) {
+        // Validate user type
+        if (!isValidUserType(userType)) {
+            console.error('Invalid user type:', userType);
+            alert(`Invalid user type: ${userType}. Please contact support.`);
+            return;
+        }
+        
+        console.log(`Showing dashboard for user type: ${userType}`);
+        
         // Hide hero section and all dashboards first
         document.getElementById('home').style.display = 'none';
         const dashboards = document.querySelectorAll('.user-dashboard');
@@ -813,6 +853,13 @@ function showError(message) {
         if (targetDashboard) {
             targetDashboard.style.display = 'block';
             targetDashboard.scrollIntoView({ behavior: 'smooth' });
+            console.log(`Dashboard displayed successfully for ${formatUserTypeDisplay(userType)}`);
+        } else {
+            console.error(`Dashboard not found for user type: ${userType}`);
+            alert(`Dashboard not available for ${formatUserTypeDisplay(userType)}. Please contact support.`);
+            // Show home section as fallback
+            document.getElementById('home').style.display = 'block';
+            return;
         }
         
         // Load user-specific data (simulate for now)
@@ -820,33 +867,56 @@ function showError(message) {
     }
     
     function loadUserData(userType) {
-        // Simulate loading user-specific data
-        switch(userType) {
-            case 'customer':
-                document.getElementById('customerSavedProperties').textContent = '3';
-                document.getElementById('customerActiveRequests').textContent = '1';
-                document.getElementById('customerViewedProperties').textContent = '15';
-                break;
-            case 'broker':
-                document.getElementById('brokerActiveListings').textContent = '12';
-                document.getElementById('brokerLeads').textContent = '8';
-                document.getElementById('brokerCommission').textContent = '₹45,000';
-                break;
-            case 'builder':
-                document.getElementById('builderActiveProjects').textContent = '2';
-                document.getElementById('builderUnitsAvailable').textContent = '24';
-                document.getElementById('builderUnitsSold').textContent = '6';
-                break;
-            case 'shop_owner':
-                document.getElementById('shopProducts').textContent = '18';
-                document.getElementById('shopOrders').textContent = '5';
-                document.getElementById('shopRevenue').textContent = '₹28,500';
-                break;
-            case 'service_provider':
-                document.getElementById('servicesOffered').textContent = '4';
-                document.getElementById('activeBookings').textContent = '7';
-                document.getElementById('serviceRevenue').textContent = '₹32,000';
-                break;
+        console.log(`Loading user data for ${userType}`);
+        
+        // Helper function to safely update element text content
+        function safeUpdateElement(elementId, textContent) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = textContent;
+            } else {
+                console.warn(`Element not found: ${elementId}`);
+            }
+        }
+        
+        // Simulate loading user-specific data with error handling
+        try {
+            switch(userType) {
+                case 'customer':
+                    safeUpdateElement('customerSavedProperties', '3');
+                    safeUpdateElement('customerActiveRequests', '1');
+                    safeUpdateElement('customerViewedProperties', '15');
+                    console.log('Customer dashboard data loaded successfully');
+                    break;
+                case 'broker':
+                    safeUpdateElement('brokerActiveListings', '12');
+                    safeUpdateElement('brokerLeads', '8');
+                    safeUpdateElement('brokerCommission', '₹45,000');
+                    console.log('Broker dashboard data loaded successfully');
+                    break;
+                case 'builder':
+                    safeUpdateElement('builderActiveProjects', '2');
+                    safeUpdateElement('builderUnitsAvailable', '24');
+                    safeUpdateElement('builderUnitsSold', '6');
+                    console.log('Builder dashboard data loaded successfully');
+                    break;
+                case 'shop_owner':
+                    safeUpdateElement('shopProducts', '18');
+                    safeUpdateElement('shopOrders', '5');
+                    safeUpdateElement('shopRevenue', '₹28,500');
+                    console.log('Shop Owner dashboard data loaded successfully');
+                    break;
+                case 'service_provider':
+                    safeUpdateElement('servicesOffered', '4');
+                    safeUpdateElement('activeBookings', '7');
+                    safeUpdateElement('serviceRevenue', '₹32,000');
+                    console.log('Service Provider dashboard data loaded successfully');
+                    break;
+                default:
+                    console.warn(`No data loader defined for user type: ${userType}`);
+            }
+        } catch (error) {
+            console.error(`Error loading user data for ${userType}:`, error);
         }
     }
     
