@@ -257,3 +257,13 @@ This project is proprietary software owned by The Real Fintech AI Company. All r
 ---
 
 *Last Updated: August 2, 2025 | Version 1.0.0*
+
+## CI/CD and Domain Automation
+
+- Live deploys on push to `main`/`master` using `FirebaseExtended/action-hosting-deploy@v0`.
+- Preview deploys on pull requests.
+- Domains are auto-attached via `scripts/ensure-firebase-domains.sh` using the service account in `FIREBASE_SERVICE_ACCOUNT_THE_REAL_FINTECH_AI_COMPANY`.
+- To ensure apex DNS uses Firebase A records via Cloud DNS, run `npm run ensure:dns` with `PROJECT_ID` and optional `ZONE_NAME`.
+
+Required secrets:
+- `FIREBASE_SERVICE_ACCOUNT_THE_REAL_FINTECH_AI_COMPANY`: JSON of a service account with roles `Firebase Hosting Admin` and `Service Account Token Creator` in project `the-real-fintech-ai-company`.

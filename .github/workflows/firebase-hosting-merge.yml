@@ -6,13 +6,51 @@ on:
   push:
     branches:
       - main
+      - master
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: anything you need
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install deps
+        run: |
+          npm install
+          sudo apt-get update -y
+          sudo apt-get install -y jq
+      - name: Authenticate to Google Cloud (ADC)
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_THE_REAL_FINTECH_AI_COMPANY }}
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+      - name: Enable required APIs
+        run: |
+          gcloud services enable firebasehosting.googleapis.com
+      - name: Ensure Firebase domains attached (API)
+        env:
+          PROJECT_ID: the-real-fintech-ai-company
+          SITE_ID: the-real-fintech-ai-company
+        run: |
+          bash scripts/ensure-firebase-domains-api.sh
+      - name: Optional auth to Google Cloud for DNS updates
+        if: ${{ secrets.GCLOUD_SA_JSON != '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCLOUD_SA_JSON }}
+      - name: Optional setup gcloud
+        if: ${{ secrets.GCLOUD_SA_JSON != '' }}
+        uses: google-github-actions/setup-gcloud@v2
+      - name: Optional ensure Cloud DNS apex A records
+        if: ${{ secrets.GCLOUD_SA_JSON != '' }}
+        env:
+          PROJECT_ID: the-real-fintech-ai-company
+        run: |
+          bash scripts/ensure-gcloud-dns.sh
+      - name: Deploy to live channel
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_THE_REAL_FINTECH_AI_COMPANY }}
