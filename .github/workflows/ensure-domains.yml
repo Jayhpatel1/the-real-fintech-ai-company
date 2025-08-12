@@ -16,10 +16,17 @@ jobs:
           npm install
           sudo apt-get update -y
           sudo apt-get install -y jq
-      - name: Authenticate to Google Cloud (ADC)
+      - name: Authenticate to Google Cloud (ADC) via JSON key
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_THE_REAL_FINTECH_AI_COMPANY != '' }}
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_THE_REAL_FINTECH_AI_COMPANY }}
+      - name: Authenticate to Google Cloud (ADC) via Workload Identity Federation
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_THE_REAL_FINTECH_AI_COMPANY == '' && secrets.GCP_WORKLOAD_IDENTITY_PROVIDER != '' && secrets.GCP_WIF_SERVICE_ACCOUNT != '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_WIF_SERVICE_ACCOUNT }}
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
       - name: Enable required APIs
