@@ -56,3 +56,4 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_THE_REAL_FINTECH_AI_COMPANY }}
           channelId: live
           projectId: the-real-fintech-ai-company
+          target: main
