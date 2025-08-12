@@ -58,3 +58,6 @@ jobs:
           channelId: live
           projectId: the-real-fintech-ai-company
           target: main
+      - name: Verify HTTPS readiness
+        run: |
+          bash scripts/verify-https.sh
