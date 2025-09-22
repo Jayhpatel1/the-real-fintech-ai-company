@@ -882,16 +882,6 @@
             <span class="close">&times;</span>
             <h2>Login</h2>
             <form id="loginForm">
-                <div class="form-group">
-                    <label>I am a:</label>
-                    <select id="loginUserType" required>
-                        <option value="customer">Customer</option>
-                        <option value="broker">Broker</option>
-                        <option value="builder">Builder</option>
-                        <option value="service_provider">Service Provider</option>
-                        <option value="shop_owner">Shop Owner</option>
-                    </select>
-                </div>
                 <input type="email" id="loginEmail" placeholder="Email" required>
                 <input type="password" id="loginPassword" placeholder="Password" required>
                 <button type="submit" class="btn-primary">Login</button>
@@ -990,55 +980,5 @@
     </div>
     
     <script src="script.js?v=2025080409"></script>
-    
-    <!-- Direct hamburger menu fix -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('🔧 Direct hamburger menu fix loaded');
-        
-        const hamburger = document.querySelector('.hamburger');
-        const navMenu = document.querySelector('.nav-menu');
-        
-        console.log('Elements found:', {
-            hamburger: !!hamburger,
-            navMenu: !!navMenu
-        });
-        
-        if (hamburger && navMenu) {
-            hamburger.addEventListener('click', function(e) {
-                console.log('🍔 Direct hamburger clicked!');
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Toggle active classes
-                navMenu.classList.toggle('active');
-                hamburger.classList.toggle('active');
-                
-                console.log('Menu toggled:', navMenu.classList.contains('active'));
-            });
-            
-            // Close menu when clicking nav links
-            const navLinks = navMenu.querySelectorAll('a');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    navMenu.classList.remove('active');
-                    hamburger.classList.remove('active');
-                });
-            });
-            
-            // Close menu when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
-                    navMenu.classList.remove('active');
-                    hamburger.classList.remove('active');
-                }
-            });
-            
-            console.log('✅ Direct hamburger menu initialized successfully!');
-        } else {
-            console.error('❌ Hamburger menu elements not found!');
-        }
-    });
-    </script>
 </body>
 </html>

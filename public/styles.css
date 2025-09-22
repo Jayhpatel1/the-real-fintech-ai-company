@@ -49,10 +49,10 @@ body {
 }
 
 .header {
-    background: #F4C430;
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(244, 196, 48, 0.3);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     position: fixed;
     top: 0;
     width: 100%;
@@ -226,6 +226,14 @@ background: linear-gradient(135deg, var(--saffron) 0%, var(--golden) 100%);
     border: none;
     border-radius: 12px;
     box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 }
 
 .contact-form input, .contact-form select, .contact-form textarea {
@@ -998,8 +1006,17 @@ border: 2px solid var(--bright-yellow);
     transform-origin: center;
 }
 
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    background-color: #333;
+    transition: all 0.3s ease-in-out;
+}
+
 .hamburger.active span:nth-child(1) {
-    transform: rotate(45deg) translate(9px, 9px);
+    transform: translateY(8px) rotate(45deg);
 }
 
 .hamburger.active span:nth-child(2) {
@@ -1007,7 +1024,18 @@ border: 2px solid var(--bright-yellow);
 }
 
 .hamburger.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(9px, -9px);
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+    .nav-menu.active .mobile-auth-item {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem 2rem;
+        border-top: 1px solid #e2e8f0;
+        margin-top: 1rem;
+    }
 }
 
 /* Hero Section */
@@ -1285,16 +1313,18 @@ border: 3px solid var(--bright-yellow);
 }
 
 .product-category {
-    background: white;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
     padding: 2rem;
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     transition: transform 0.3s ease;
     text-align: center;
 }
 
 .product-category:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px) scale(1.02);
 }
 
 .category-icon {
@@ -1351,16 +1381,18 @@ border: 3px solid var(--bright-yellow);
 }
 
 .service-card {
-    background: #f8fafc;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
     padding: 2rem;
     border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     transition: all 0.3s ease;
-    border: 1px solid #e2e8f0;
 }
 
 .service-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(31, 38, 135, 0.5);
 }
 
 .service-icon {
@@ -1762,6 +1794,10 @@ border-color: var(--bright-yellow) !important;
 
 /* Hide mobile auth buttons on desktop */
 .mobile-auth-item {
+    display: none;
+}
+
+#admin-float-btn {
     display: none;
 }
 

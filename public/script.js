@@ -390,34 +390,30 @@ function speakWelcomeMessage() {
 
     function processVoiceQuery(query) {
         console.log('Processing query:', query);
-        
-        // Clean and normalize the query
+
         const normalizedQuery = query.toLowerCase().trim();
-        
-        // Enhanced keyword detection
-        const keywords = {
-            buy: ['buy', 'purchase', 'buying', 'get', 'need', 'want'],
-            sell: ['sell', 'selling', 'sale'],
-            rent: ['rent', 'rental', 'renting', 'lease'],
-            property: ['house', 'home', 'flat', 'apartment', 'property', 'plot', 'land', 'building'],
-            location: ['mumbai', 'delhi', 'bhavnagar', 'ahmedabad', 'surat', 'bangalore', 'pune', 'hyderabad'],
-            products: ['solar', 'panel', 'battery', 'door', 'furniture', 'inverter', 'system']
-        };
-        
-        // Check for enhanced queries
-        const isBuyQuery = keywords.buy.some(keyword => normalizedQuery.includes(keyword));
-        const isSellQuery = keywords.sell.some(keyword => normalizedQuery.includes(keyword));
-        const isRentQuery = keywords.rent.some(keyword => normalizedQuery.includes(keyword));
-        
-        if (isBuyQuery || isSellQuery || isRentQuery) {
-            let enhancedResults = generateEnhancedAIResponse(normalizedQuery, {isBuy: isBuyQuery, isSell: isSellQuery, isRent: isRentQuery});
-            voiceResultModal.style.display = 'block';
-            voiceSearchResults.innerHTML = enhancedResults;
-            return;
+        let results = '';
+
+        // Keywords for different categories
+        const propertyKeywords = ['bhk', 'apartment', 'flat', 'villa', 'house', 'property'];
+        const productKeywords = ['solar', 'panel', 'battery', 'door', 'furniture', 'inverter', 'system', 'tiles', 'paint'];
+        const serviceKeywords = ['construction', 'renovation', 'demolition', 'design', 'engineering', 'brokerage'];
+
+        // Check if the query matches any category
+        const isPropertyQuery = propertyKeywords.some(keyword => normalizedQuery.includes(keyword));
+        const isProductQuery = productKeywords.some(keyword => normalizedQuery.includes(keyword));
+        const isServiceQuery = serviceKeywords.some(keyword => normalizedQuery.includes(keyword));
+
+        if (isPropertyQuery) {
+            results = generateAIResponse(normalizedQuery);
+        } else if (isProductQuery) {
+            results = generateAIResponse(normalizedQuery);
+        } else if (isServiceQuery) {
+            results = generateAIResponse(normalizedQuery);
+        } else {
+            results = generateAIResponse(normalizedQuery); // Default to generic response
         }
-        
-        let results = generateAIResponse(normalizedQuery);
-        
+
         voiceResultModal.style.display = 'block';
         voiceSearchResults.innerHTML = results;
     }
@@ -432,85 +428,57 @@ function speakWelcomeMessage() {
         let response = '<div class="ai-response">';
         response += '<h3><i class="fas fa-robot"></i> AI Assistant Response</h3>';
         response += '<div class="query-display">You asked: "' + query + '"</div>';
-        
+        let foundResult = false;
+
         // Property search
-        if (query.includes('bhk') || query.includes('apartment') || query.includes('flat') || query.includes('villa')) {
+        const propertyKeywords = ['bhk', 'apartment', 'flat', 'villa', 'house', 'property'];
+        if (propertyKeywords.some(keyword => query.includes(keyword))) {
             response += '<div class="result-section">';
             response += '<h4><i class="fas fa-home"></i> Properties Found</h4>';
             sampleData.properties.forEach(prop => {
-                response += `<div class="property-card">`;
-                response += `<h5>${prop.type}</h5>`;
-                response += `<p><strong>Price:</strong> ${prop.price}</p>`;
-                response += `<p><strong>Location:</strong> ${prop.location}</p>`;
-                response += `<p><strong>Area:</strong> ${prop.area}</p>`;
-                response += `<button class="btn-primary" onclick="alert('Contact us at +91 977-308-1099 for more details!')">Contact Now</button>`;
-                response += `</div>`;
+                const predictedPrice = predictPrice(prop.location, prop.area);
+                response += `<div class="property-card"><h5>${prop.type}</h5><p><strong>Price:</strong> ${prop.price}</p><p><strong>Predicted Price:</strong> ${predictedPrice}</p><p><strong>Location:</strong> ${prop.location}</p><p><strong>Area:</strong> ${prop.area}</p><button class="btn-primary" onclick="alert('Contact us at +91 977-308-1099 for more details!')">Contact Now</button></div>`;
             });
             response += '</div>';
+            foundResult = true;
         }
-        
+
         // Product search
-        for (let product in sampleData.products) {
-            if (query.includes(product)) {
-                response += '<div class="result-section">';
-                response += `<h4><i class="fas fa-shopping-cart"></i> ${product.charAt(0).toUpperCase() + product.slice(1)} Products</h4>`;
-                sampleData.products[product].forEach(item => {
-                    response += `<div class="product-card">`;
-                    response += `<h5>${item.name}</h5>`;
-                    response += `<p><strong>Price:</strong> ${item.price}</p>`;
-                    if (item.efficiency) response += `<p><strong>Efficiency:</strong> ${item.efficiency}</p>`;
-                    if (item.brand) response += `<p><strong>Brand:</strong> ${item.brand}</p>`;
-                    if (item.material) response += `<p><strong>Material:</strong> ${item.material}</p>`;
-                    response += `<button class="btn-primary" onclick="alert('Contact us at jay@therealfintech.com for product details!')">Get Quote</button>`;
-                    response += `</div>`;
-                });
-                response += '</div>';
-                break;
-            }
-        }
-        
-        // Service search
-        for (let service in sampleData.services) {
-            if (query.includes(service)) {
-                response += '<div class="result-section">';
-                response += `<h4><i class="fas fa-tools"></i> ${service.charAt(0).toUpperCase() + service.slice(1)} Services</h4>`;
-                response += `<div class="service-info">`;
-                response += `<p>${sampleData.services[service]}</p>`;
-                response += `<button class="btn-primary" onclick="alert('Call us at +91 977-308-1099 for service booking!')">Book Service</button>`;
-                response += `</div>`;
-                response += '</div>';
-                break;
-            }
-        }
-        
-        // Default response if no specific match
-        if (!response.includes('result-section')) {
+        const productKeywords = ['solar', 'panel', 'battery', 'door', 'furniture', 'inverter', 'system', 'tiles', 'paint'];
+        if (productKeywords.some(keyword => query.includes(keyword))) {
             response += '<div class="result-section">';
-            response += '<h4><i class="fas fa-info-circle"></i> How Can We Help?</h4>';
-            response += '<p>I can help you with:</p>';
-            response += '<ul>';
-            response += '<li>Finding properties (apartments, villas, flats)</li>';
-            response += '<li>Real estate products (solar panels, doors, furniture, etc.)</li>';
-            response += '<li>Construction and renovation services</li>';
-            response += '<li>Investment advice and zero brokerage deals</li>';
-            response += '</ul>';
-            response += '<p>Try saying something like:</p>';
-            response += '<ul>';
-            response += '<li>"Show me 2BHK apartments under 50 lakhs"</li>';
-            response += '<li>"I need solar panels for my home"</li>';
-            response += '<li>"Construction services in Bhavnagar"</li>';
-            response += '</ul>';
+            response += '<h4><i class="fas fa-shopping-cart"></i> Products Found</h4>';
+            for (const category in sampleData.products) {
+                sampleData.products[category].forEach(item => {
+                    if (query.includes(item.name.toLowerCase()) || query.includes(category)) {
+                        response += `<div class="product-card"><h5>${item.name}</h5><p><strong>Price:</strong> ${item.price}</p>${item.efficiency ? `<p><strong>Efficiency:</strong> ${item.efficiency}</p>` : ''}${item.brand ? `<p><strong>Brand:</strong> ${item.brand}</p>` : ''}${item.material ? `<p><strong>Material:</strong> ${item.material}</p>` : ''}<button class="btn-primary" onclick="alert('Contact us at jay@therealfintech.com for product details!')">Get Quote</button></div>`;
+                        foundResult = true;
+                    }
+                });
+            }
             response += '</div>';
         }
-        
-        response += '<div class="contact-cta">';
-        response += '<p><strong>Ready to proceed?</strong></p>';
-        response += '<div class="cta-buttons">';
-        response += '<button class="btn-primary" onclick="window.location.href=\'#contact\'; closeModal(\'voiceResultModal\');">Contact Us</button>';
-        response += '<button class="btn-secondary" onclick="closeModal(\'voiceResultModal\');">Search Again</button>';
-        response += '</div>';
-        response += '</div>';
-        
+
+        // Service search
+        const serviceKeywords = ['construction', 'renovation', 'demolition', 'design', 'engineering', 'brokerage'];
+        if (serviceKeywords.some(keyword => query.includes(keyword))) {
+            response += '<div class="result-section">';
+            response += '<h4><i class="fas fa-tools"></i> Services Found</h4>';
+            for (const category in sampleData.services) {
+                if (query.includes(category)) {
+                    response += `<div class="service-info"><p>${sampleData.services[category]}</p><button class="btn-primary" onclick="alert('Call us at +91 977-308-1099 for service booking!')">Book Service</button></div>`;
+                    foundResult = true;
+                }
+            }
+            response += '</div>';
+        }
+
+        // Default response if no specific match
+        if (!foundResult) {
+            response += '<div class="result-section"><h4><i class="fas fa-info-circle"></i> How Can We Help?</h4><p>I can help you with properties, products, and services. Try saying something like:</p><ul><li>"Show me 2BHK apartments"</li><li>"I need solar panels"</li><li>"Construction services in Bhavnagar"</li></ul></div>';
+        }
+
+        response += '<div class="contact-cta"><p><strong>Ready to proceed?</strong></p><div class="cta-buttons"><button class="btn-primary" onclick="window.location.href=\'#contact\'; closeModal(\'voiceResultModal\');">Contact Us</button><button class="btn-secondary" onclick="closeModal(\'voiceResultModal\');">Search Again</button></div></div>';
         response += '</div>';
         return response;
     }
@@ -569,171 +537,20 @@ function showError(message) {
         }
     };
 
-    // Mobile menu toggle - Fix hamburger functionality
+    // Mobile menu toggle
     if (hamburger && navMenu) {
-        console.log('✅ Hamburger menu initialized');
-        console.log('Hamburger element:', hamburger);
-        console.log('Nav menu element:', navMenu);
-        
-        hamburger.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('🍔 Hamburger clicked - toggling menu');
-            
-            // Toggle active class on both elements
-            const isActive = navMenu.classList.contains('active');
-            
-            if (isActive) {
-                navMenu.classList.remove('active');
-                hamburger.classList.remove('active');
-                removeMobileAuthButtons();
-                console.log('📱 Mobile menu closed');
-            } else {
-                navMenu.classList.add('active');
-                hamburger.classList.add('active');
-                addMobileAuthButtons();
-                console.log('📱 Mobile menu opened - added auth buttons');
-            }
-            
-            // Force style update
-            navMenu.style.display = isActive ? 'none' : 'flex';
-            
-            console.log('Menu active:', navMenu.classList.contains('active'));
-            console.log('Hamburger active:', hamburger.classList.contains('active'));
+        hamburger.addEventListener('click', function () {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
         });
-        
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
-                if (navMenu.classList.contains('active')) {
-                    console.log('🔒 Closing menu - clicked outside');
-                    navMenu.classList.remove('active');
-                    hamburger.classList.remove('active');
-                    navMenu.style.display = 'none';
-                    removeMobileAuthButtons();
-                }
-            }
-        });
-        
-        // Make navigation links clickable
-        const navLinks = navMenu.querySelectorAll('a');
-        console.log('Found navigation links:', navLinks.length);
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Don't prevent default for navigation - let links work
-                console.log('📍 Navigation link clicked:', this.textContent);
-                
-                // Close mobile menu after link click
-                navMenu.classList.remove('active');
+
+        // Close menu when a link is clicked
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
                 hamburger.classList.remove('active');
-                navMenu.style.display = 'none';
-                removeMobileAuthButtons();
+                navMenu.classList.remove('active');
             });
         });
-        
-        // Initialize hamburger visibility for mobile
-        function checkMobileView() {
-            if (window.innerWidth <= 768) {
-                hamburger.style.display = 'flex';
-                navMenu.style.display = navMenu.classList.contains('active') ? 'flex' : 'none';
-            } else {
-                hamburger.style.display = 'none';
-                navMenu.style.display = 'flex';
-                navMenu.classList.remove('active');
-                hamburger.classList.remove('active');
-                removeMobileAuthButtons();
-            }
-        }
-        
-        // Check on load and resize
-        checkMobileView();
-        window.addEventListener('resize', checkMobileView);
-        
-    } else {
-        console.error('❌ Hamburger or navMenu not found:', { hamburger, navMenu });
-        // Try to find elements again
-        setTimeout(() => {
-            const retryHamburger = document.querySelector('.hamburger');
-            const retryNavMenu = document.querySelector('.nav-menu');
-            console.log('🔄 Retry finding elements:', { retryHamburger, retryNavMenu });
-        }, 1000);
-    }
-    
-    // Function to add Login & Signup buttons to mobile menu
-    function addMobileAuthButtons() {
-        // Check if buttons already exist
-        if (document.querySelector('.mobile-auth-buttons')) {
-            return;
-        }
-        
-        const mobileAuthContainer = document.createElement('div');
-        mobileAuthContainer.className = 'mobile-auth-buttons';
-        mobileAuthContainer.style.cssText = `
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            padding: 1rem 2rem;
-            border-top: 1px solid #e2e8f0;
-            margin-top: 1rem;
-        `;
-        
-        const loginBtn = document.createElement('button');
-        loginBtn.textContent = 'Login';
-        loginBtn.className = 'mobile-login-btn';
-        loginBtn.style.cssText = `
-            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--deep-blue) 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        `;
-        loginBtn.onclick = function() {
-            // Add active state
-            loginBtn.classList.add('active');
-            setTimeout(() => loginBtn.classList.remove('active'), 300);
-            openModal('loginModal');
-            navMenu.classList.remove('active');
-            hamburger.classList.remove('active');
-            removeMobileAuthButtons();
-        };
-        
-        const signupBtn = document.createElement('button');
-        signupBtn.textContent = 'Sign Up';
-        signupBtn.className = 'mobile-signup-btn';
-        signupBtn.style.cssText = `
-            background: linear-gradient(135deg, var(--saffron-primary) 0%, var(--golden) 50%, var(--saffron-bright) 100%);
-            color: white;
-            border: 2px solid var(--saffron-primary);
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        `;
-        signupBtn.onclick = function() {
-            // Add active state
-            signupBtn.classList.add('active');
-            setTimeout(() => signupBtn.classList.remove('active'), 300);
-            openModal('signupModal');
-            navMenu.classList.remove('active');
-            hamburger.classList.remove('active');
-            removeMobileAuthButtons();
-        };
-        
-        mobileAuthContainer.appendChild(loginBtn);
-        mobileAuthContainer.appendChild(signupBtn);
-        navMenu.appendChild(mobileAuthContainer);
-    }
-    
-    // Function to remove mobile auth buttons
-    function removeMobileAuthButtons() {
-        const mobileAuthButtons = document.querySelector('.mobile-auth-buttons');
-        if (mobileAuthButtons) {
-            mobileAuthButtons.remove();
-        }
     }
 
     // Smooth scrolling for navigation links
@@ -1228,6 +1045,24 @@ function showError(message) {
         currentUserData = userData;
     }
     
+    function predictPrice(location, area) {
+        const basePricePerSqFt = {
+            'mumbai': 15000,
+            'delhi': 12000,
+            'bhavnagar': 5000,
+            'ahmedabad': 7000,
+            'surat': 6000,
+            'bangalore': 10000,
+            'pune': 8000,
+            'hyderabad': 9000
+        };
+
+        const pricePerSqFt = basePricePerSqFt[location.toLowerCase()] || 6000;
+        const predictedPrice = pricePerSqFt * parseInt(area);
+
+        return `₹${(predictedPrice / 100000).toFixed(2)} Lakhs`;
+    }
+
     function showDashboard(userType) {
         // Validate user type
         if (!isValidUserType(userType)) {
@@ -1343,7 +1178,6 @@ function showError(message) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            const userType = document.getElementById('loginUserType').value;
             
             // Input validation
             if (!email.trim()) {
